@@ -3,7 +3,7 @@ session_start();
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
-// Mark all as read when visiting? Or individual. Let's list them.
+// Marking all as read when visiting? Or individual. Let's list them.
 $notifs = $conn->query("SELECT * FROM notifications ORDER BY created_at DESC LIMIT 50");
 ?>
 
