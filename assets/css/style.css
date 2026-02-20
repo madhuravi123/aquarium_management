@@ -1,27 +1,1171 @@
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ═══════════════════════════════════════════════════════════════════════════
+   HARINI AQUARIUM MANAGEMENT SYSTEM — PREMIUM UI/UX DESIGN SYSTEM
+   Modern Ocean-Themed Design with Glassmorphism & Smooth Animations
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ────────────────────────────────────────────────────────────────────────────
+   1. CSS VARIABLES & DESIGN TOKENS
+   ──────────────────────────────────────────────────────────────────────────── */
+:root {
+    /* ── Ocean Color Palette ──────────────────────────────── */
+    --ocean-deep:      #0a3d62;
+    --ocean-primary:   #1e6091;
+    --ocean-teal:      #0d7377;
+    --ocean-bright:    #14d2c8;
+    --ocean-light:     #7ecbf5;
+    --ocean-mist:      #e8f4f8;
+    
+    /* ── Semantic Colors ──────────────────────────────────── */
+    --primary:         #1e6091;
+    --primary-light:   #4a8bb8;
+    --primary-dark:    #0a3d62;
+    --secondary:       #14d2c8;
+    --success:         #20c997;
+    --success-light:   #3dd5a7;
+    --danger:          #ef476f;
+    --warning:         #ffd166;
+    --info:            #4cc9f0;
+    --dark:            #1a1d29;
+    --light:           #f8f9fa;
+    --muted:           #6c757d;
+    
+    /* ── Gradient Definitions ─────────────────────────────── */
+    --gradient-ocean:     linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-primary) 50%, var(--ocean-teal) 100%);
+    --gradient-teal:      linear-gradient(135deg, var(--ocean-teal) 0%, var(--ocean-bright) 100%);
+    --gradient-primary:   linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    --gradient-success:   linear-gradient(135deg, #06d6a0 0%, #20c997 100%);
+    --gradient-danger:    linear-gradient(135deg, #ef476f 0%, #ff6b9d 100%);
+    --gradient-warning:   linear-gradient(135deg, #ffd166 0%, #ffb703 100%);
+    --gradient-info:      linear-gradient(135deg, #4cc9f0 0%, #7ecbf5 100%);
+    
+    /* ── Glassmorphism ────────────────────────────────────── */
+    --glass-bg:           rgba(255, 255, 255, 0.08);
+    --glass-border:       rgba(255, 255, 255, 0.15);
+    --glass-shadow:       0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    --glass-backdrop:     blur(12px);
+    
+    /* ── Shadows & Depth ──────────────────────────────────── */
+    --shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md:          0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg:          0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-xl:          0 12px 48px rgba(0, 0, 0, 0.15);
+    --shadow-glow:        0 0 24px rgba(20, 210, 200, 0.3);
+    --shadow-glow-hover:  0 0 32px rgba(20, 210, 200, 0.5);
+    
+    /* ── Border Radius ────────────────────────────────────── */
+    --radius-sm:          6px;
+    --radius-md:          12px;
+    --radius-lg:          16px;
+    --radius-xl:          24px;
+    --radius-full:        9999px;
+    
+    /* ── Spacing ──────────────────────────────────────────── */
+    --space-xs:           0.25rem;
+    --space-sm:           0.5rem;
+    --space-md:           1rem;
+    --space-lg:           1.5rem;
+    --space-xl:           2rem;
+    --space-2xl:          3rem;
+    
+    /* ── Typography ───────────────────────────────────────── */
+    --font-family:        'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', 'Roboto', sans-serif;
+    --font-mono:          'Consolas', 'Monaco', 'Courier New', monospace;
+    
+    /* ── Transitions ──────────────────────────────────────── */
+    --transition-fast:    0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base:    0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow:    0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce:  0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
+
+/* ────────────────────────────────────────────────────────────────────────────
+   2. GLOBAL STYLES & RESETS
+   ──────────────────────────────────────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f6 100%);
+    color: var(--dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar Styling ────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--ocean-primary), var(--ocean-teal));
+    border-radius: 10px;
+    transition: background var(--transition-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--ocean-teal), var(--ocean-bright));
+}
+
+/* ── Selection ────────────────────────────────────────────────── */
+::selection {
+    background: var(--ocean-bright);
+    color: white;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   3. ADMIN SIDEBAR — GLASSMORPHISM DESIGN
+   ──────────────────────────────────────────────────────────────────────────── */
 .sidebar {
     min-height: 100vh;
-    background-color: #343a40;
+    background: var(--gradient-ocean);
+    position: relative;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    transition: all var(--transition-base);
 }
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.08)"/><circle cx="60" cy="45" r="3" fill="rgba(255,255,255,0.06)"/><circle cx="80" cy="70" r="2.5" fill="rgba(255,255,255,0.07)"/><circle cx="30" cy="80" r="2" fill="rgba(255,255,255,0.05)"/><circle cx="70" cy="15" r="1.5" fill="rgba(255,255,255,0.09)"/></svg>');
+    background-size: 150px 150px;
+    opacity: 0.4;
+    pointer-events: none;
+    animation: floatBubbles 30s linear infinite;
+}
+
+@keyframes floatBubbles {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 -300px; }
+}
+
 .sidebar a {
-    color: #adb5bd;
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
-    padding: 10px 15px;
-    display: block;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    position: relative;
+    margin: 2px 0;
+    font-weight: 500;
+    letter-spacing: 0.3px;
 }
-.sidebar a:hover, .sidebar a.active {
-    color: #fff;
-    background-color: #495057;
+
+.sidebar a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background: var(--ocean-bright);
+    border-radius: 0 3px 3px 0;
+    transition: height var(--transition-base);
 }
-.card-custom {
+
+.sidebar a:hover,
+.sidebar a.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar a:hover::before,
+.sidebar a.active::before {
+    height: 60%;
+}
+
+.sidebar a i {
+    width: 24px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: transform var(--transition-base);
+}
+
+.sidebar a:hover i {
+    transform: scale(1.15);
+}
+
+.sidebar hr {
+    border-color: rgba(255, 255, 255, 0.15);
+    margin: 0.75rem 0;
+}
+
+.sidebar .badge {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    font-weight: 700;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.08); opacity: 0.9; }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   4. CARD COMPONENTS — PREMIUM GLASS & DEPTH
+   ──────────────────────────────────────────────────────────────────────────── */
+.card-custom,
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    background: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-custom::before,
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-teal);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.card-custom:hover,
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(20, 210, 200, 0.2);
+}
+
+.card-custom:hover::before,
+.card:hover::before {
+    opacity: 1;
+}
+
+.card-header {
+    background: linear-gradient(135deg, rgba(30, 96, 145, 0.05), rgba(20, 210, 200, 0.05));
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 1rem 1.25rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+}
+
+.card-header.bg-primary,
+.card-header.bg-success,
+.card-header.bg-danger,
+.card-header.bg-warning,
+.card-header.bg-info,
+.card-header.bg-secondary {
+    background: var(--gradient-ocean) !important;
+    color: white !important;
     border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
+
+.card-header.bg-success {
+    background: var(--gradient-success) !important;
+}
+
+.card-header.bg-danger {
+    background: var(--gradient-danger) !important;
+}
+
+.card-header.bg-warning {
+    background: var(--gradient-warning) !important;
+}
+
+.card-header.bg-info {
+    background: var(--gradient-info) !important;
+}
+
+.card-header.bg-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-footer {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 1rem 1.25rem;
+}
+
+/* ── Dashboard KPI Cards ────────────────────────────────────────── */
+.card-custom.bg-info,
+.card-custom.bg-success,
+.card-custom.bg-warning,
+.card-custom.bg-danger,
+.card-custom.bg-primary {
+    background: var(--gradient-ocean);
+    border: none;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-custom.bg-info {
+    background: var(--gradient-info);
+}
+
+.card-custom.bg-success {
+    background: var(--gradient-success);
+}
+
+.card-custom.bg-warning {
+    background: var(--gradient-warning);
+}
+
+.card-custom.bg-danger {
+    background: var(--gradient-danger);
+}
+
+.card-custom.bg-primary {
+    background: var(--gradient-primary);
+}
+
+.card-custom.bg-info::after,
+.card-custom.bg-success::after,
+.card-custom.bg-warning::after,
+.card-custom.bg-danger::after,
+.card-custom.bg-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatCircle 6s ease-in-out infinite;
+}
+
+@keyframes floatCircle {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-20px, 20px) scale(1.1); }
+}
+
+.card-custom.bg-info .card-body,
+.card-custom.bg-success .card-body,
+.card-custom.bg-warning .card-body,
+.card-custom.bg-danger .card-body,
+.card-custom.bg-primary .card-body {
+    position: relative;
+    z-index: 1;
+}
+
+.card-custom.bg-info:hover,
+.card-custom.bg-success:hover,
+.card-custom.bg-warning:hover,
+.card-custom.bg-danger:hover,
+.card-custom.bg-primary:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: var(--shadow-glow);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   5. BUTTONS — MODERN GRADIENTS & MICRO-INTERACTIONS
+   ──────────────────────────────────────────────────────────────────────────── */
+.btn {
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 0.6rem 1.4rem;
+    transition: all var(--transition-base);
+    border: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width var(--transition-slow), height var(--transition-slow);
+    z-index: -1;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: var(--gradient-ocean);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.btn-success {
+    background: var(--gradient-success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #20c997 0%, #06d6a0 100%);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--gradient-danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ef476f 100%);
+    color: white;
+}
+
+.btn-warning {
+    background: var(--gradient-warning);
+    color: var(--dark);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #ffb703 0%, #ffd166 100%);
+    color: var(--dark);
+}
+
+.btn-info {
+    background: var(--gradient-info);
+    color: white;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #7ecbf5 0%, #4cc9f0 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-info {
+    border: 2px solid;
+    background: transparent;
+    transition: all var(--transition-base);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--gradient-ocean);
+    color: white;
+    border-color: transparent;
+}
+
+.btn-outline-secondary {
+    border-color: var(--muted);
+    color: var(--muted);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--muted);
+    color: white;
+    border-color: transparent;
+}
+
+.btn-outline-success {
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.btn-outline-success:hover {
+    background: var(--gradient-success);
+    color: white;
+    border-color: transparent;
+}
+
+.btn-outline-danger {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.btn-outline-danger:hover {
+    background: var(--gradient-danger);
+    color: white;
+    border-color: transparent;
+}
+
+.btn-sm {
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   6. FORMS & INPUTS — ELEGANT & MODERN
+   ──────────────────────────────────────────────────────────────────────────── */
+.form-control,
+.form-select,
+textarea.form-control {
+    border-radius: var(--radius-md);
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    padding: 0.65rem 1rem;
+    transition: all var(--transition-base);
+    background: white;
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea.form-control:focus {
+    border-color: var(--ocean-bright);
+    box-shadow: 0 0 0 3px rgba(20, 210, 200, 0.15);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+}
+
+.input-group {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.input-group .form-control {
+    border-radius: 0;
+}
+
+.input-group .form-control:first-child {
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.input-group .btn:last-child {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* ── Radio Buttons (Payment Methods) ────────────────────────────── */
+.btn-check:checked + .btn {
+    background: var(--gradient-ocean) !important;
+    color: white !important;
+    border-color: transparent !important;
+    transform: scale(1.05);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   7. TABLES — MODERN DATA DISPLAY
+   ──────────────────────────────────────────────────────────────────────────── */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, rgba(30, 96, 145, 0.08), rgba(20, 210, 200, 0.08));
+    color: var(--dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    border: none;
+    padding: 1rem 0.75rem;
+}
+
+.table tbody tr {
+    transition: all var(--transition-fast);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(30, 96, 145, 0.03), rgba(20, 210, 200, 0.03));
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table tbody td {
+    padding: 0.9rem 0.75rem;
+    vertical-align: middle;
+    border: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(0, 0, 0, 0.015);
+}
+
+.table-hover tbody tr:hover {
+    background: linear-gradient(90deg, rgba(20, 210, 200, 0.06) 0%, rgba(30, 96, 145, 0.04) 100%);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   8. BADGES & STATUS INDICATORS
+   ──────────────────────────────────────────────────────────────────────────── */
+.badge {
+    padding: 0.35em 0.75em;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-base);
+}
+
+.badge:hover {
+    transform: scale(1.08);
+}
+
+.badge.bg-primary {
+    background: var(--gradient-ocean) !important;
+    box-shadow: 0 2px 8px rgba(30, 96, 145, 0.3);
+}
+
+.badge.bg-success {
+    background: var(--gradient-success) !important;
+    box-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
+}
+
+.badge.bg-danger {
+    background: var(--gradient-danger) !important;
+    box-shadow: 0 2px 8px rgba(239, 71, 111, 0.3);
+}
+
+.badge.bg-warning {
+    background: var(--gradient-warning) !important;
+    color: var(--dark) !important;
+    box-shadow: 0 2px 8px rgba(255, 209, 102, 0.3);
+}
+
+.badge.bg-info {
+    background: var(--gradient-info) !important;
+    box-shadow: 0 2px 8px rgba(76, 201, 240, 0.3);
+}
+
+.badge.bg-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   9. ALERTS & NOTIFICATIONS
+   ──────────────────────────────────────────────────────────────────────────── */
+.alert {
+    border-radius: var(--radius-md);
+    border: none;
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, rgba(32, 201, 151, 0.15), rgba(6, 214, 160, 0.1));
+    color: #0f5132;
+}
+
+.alert-success::before {
+    background: var(--gradient-success);
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, rgba(239, 71, 111, 0.15), rgba(255, 107, 157, 0.1));
+    color: #842029;
+}
+
+.alert-danger::before {
+    background: var(--gradient-danger);
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, rgba(255, 209, 102, 0.2), rgba(255, 183, 3, 0.15));
+    color: #664d03;
+}
+
+.alert-warning::before {
+    background: var(--gradient-warning);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(76, 201, 240, 0.15), rgba(126, 203, 245, 0.1));
+    color: #055160;
+}
+
+.alert-info::before {
+    background: var(--gradient-info);
+}
+
+.alert i {
+    font-size: 1.1rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   10. MODALS — ELEGANT DIALOGS
+   ──────────────────────────────────────────────────────────────────────────── */
+.modal-content {
+    border-radius: var(--radius-lg);
+    border: none;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: var(--gradient-ocean);
+    color: white;
+    border: none;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+    transition: opacity var(--transition-base);
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1rem 1.5rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   11. NAVBAR — CUSTOMER HEADER
+   ──────────────────────────────────────────────────────────────────────────── */
+.navbar {
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    transition: transform var(--transition-base);
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.nav-link {
+    font-weight: 500;
+    position: relative;
+    transition: all var(--transition-base);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--ocean-bright);
+    transform: translateX(-50%);
+    transition: width var(--transition-base);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 70%;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   12. FISH SHOP CARDS — PREMIUM PRODUCT DISPLAY
+   ──────────────────────────────────────────────────────────────────────────── */
+.fish-card-img-container {
+    background: linear-gradient(135deg, rgba(30, 96, 145, 0.05), rgba(20, 210, 200, 0.08));
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.card:hover .fish-card-img-container {
+    transform: scale(1.05);
+    box-shadow: inset 0 0 20px rgba(20, 210, 200, 0.15);
+}
+
+.fish-card-img-container img {
+    transition: transform var(--transition-slow);
+}
+
+.card:hover .fish-card-img-container img {
+    transform: scale(1.1) rotate(2deg);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   13. LIVE INDICATOR — DASHBOARD
+   ──────────────────────────────────────────────────────────────────────────── */
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.9rem;
+    background: linear-gradient(135deg, rgba(32, 201, 151, 0.15), rgba(6, 214, 160, 0.1));
+    border: 1.5px solid var(--success);
+    border-radius: var(--radius-full);
+    color: var(--success);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.live-indicator::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    animation: livePulse 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--success);
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.6; transform: scale(1.3); }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   14. LOGIN PAGE — PREMIUM AUTH DESIGN
+   ──────────────────────────────────────────────────────────────────────────── */
 .login-container {
-    max-width: 400px;
+    max-width: 420px;
     margin: 100px auto;
 }
+
+.login-card {
+    border: none;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-header {
+    background: var(--gradient-ocean);
+    padding: 2rem;
+    text-align: center;
+}
+
+.credential-box {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8));
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid;
+    transition: all var(--transition-base);
+    backdrop-filter: blur(10px);
+}
+
+.credential-box:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-cred  { border-color: var(--danger); }
+.staff-cred  { border-color: var(--primary); }
+.cust-cred   { border-color: var(--success); }
+
+/* ────────────────────────────────────────────────────────────────────────────
+   15. DROPDOWN MENUS
+   ──────────────────────────────────────────────────────────────────────────── */
+.dropdown-menu {
+    border-radius: var(--radius-md);
+    border: none;
+    box-shadow: var(--shadow-lg);
+    padding: 0.5rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 1rem;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: var(--gradient-ocean);
+    color: white !important;
+    transform: translateX(4px);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   16. UTILITY CLASSES
+   ──────────────────────────────────────────────────────────────────────────── */
+.text-ocean {
+    color: var(--ocean-primary) !important;
+}
+
+.text-teal {
+    color: var(--ocean-teal) !important;
+}
+
+.bg-ocean-gradient {
+    background: var(--gradient-ocean) !important;
+    color: white !important;
+}
+
+.shadow-premium {
+    box-shadow: var(--shadow-xl) !important;
+}
+
+.rounded-premium {
+    border-radius: var(--radius-lg) !important;
+}
+
+.transition-smooth {
+    transition: all var(--transition-base);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   17. RESPONSIVE UTILITIES
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+    
+    .card-custom:hover,
+    .card:hover {
+        transform: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    h1, h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   18. LOADING & ANIMATIONS
+   ──────────────────────────────────────────────────────────────────────────── */
+.spinner-border {
+    border-width: 3px;
+}
+
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   19. TABS — MODERN TAB NAVIGATION
+   ──────────────────────────────────────────────────────────────────────────── */
+.nav-tabs {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    position: relative;
+    transition: all var(--transition-base);
+}
+
+.nav-tabs .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-teal);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--ocean-primary);
+    background: rgba(30, 96, 145, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--ocean-primary);
+    background: rgba(30, 96, 145, 0.08);
+}
+
+.nav-tabs .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   20. PAGINATION
+   ──────────────────────────────────────────────────────────────────────────── */
+.pagination .page-link {
+    border-radius: var(--radius-md);
+    margin: 0 0.25rem;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    color: var(--ocean-primary);
+    font-weight: 600;
+    transition: all var(--transition-base);
+}
+
+.pagination .page-link:hover {
+    background: var(--gradient-ocean);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--gradient-ocean);
+    border-color: transparent;
+    box-shadow: var(--shadow-md);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   21. FOOTER
+   ──────────────────────────────────────────────────────────────────────────── */
+footer {
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   22. CHART ENHANCEMENTS
+   ──────────────────────────────────────────────────────────────────────────── */
+canvas {
+    border-radius: var(--radius-md);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   23. IMAGE HANDLING
+   ──────────────────────────────────────────────────────────────────────────── */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.card-img-top {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    transition: transform var(--transition-base);
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   24. PERFORMANCE OPTIMIZATIONS
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   END OF DESIGN SYSTEM
+   ──────────────────────────────────────────────────────────────────────────── */
