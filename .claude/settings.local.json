@@ -7,7 +7,14 @@
       "Bash(echo:*)",
       "Bash(\"C:/xampp/xampp_stop.exe\")",
       "Bash(\"C:/xampp/xampp_start.exe\")",
-      "Read(//c/xampp/htdocs/aquarium_management/**)"
+      "Read(//c/xampp/htdocs/aquarium_management/**)",
+      "Bash(C:/xampp/php/php.exe:*)",
+      "Bash(C:/xampp/apache/bin/httpd.exe:*)",
+      "Bash(net stop:*)",
+      "Bash(net start:*)",
+      "Bash(C:/xampp/apache_stop.bat)",
+      "Bash(C:/xampp/apache_start.bat)",
+      "Read(//c/xampp/apache/conf/**)"
     ]
   }
 }
