@@ -1,5 +1,13 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -47,9 +55,7 @@ $expenses = $conn->query("SELECT * FROM expenses ORDER BY expense_date DESC");
                                 <td>
                                     <?php echo $row['description']; ?>
                                 </td>
-                                <td>$
-                                    <?php echo number_format($row['amount'], 2); ?>
-                                </td>
+                                <td>&#8377;<?php echo number_format($row['amount'], 2); ?></td>
                                 <td>
                                     <a href="expenses_action.php?delete=<?php echo $row['id']; ?>"
                                         class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')"><i

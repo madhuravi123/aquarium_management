@@ -1,5 +1,13 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -27,8 +35,7 @@ $profit = $revenue - $expenses;
                 <div class="card card-custom bg-success text-white">
                     <div class="card-body">
                         <h5>Monthly Revenue</h5>
-                        <h3>$
-                            <?php echo number_format($revenue, 2); ?>
+                        <h3>&#8377;<?php echo number_format($revenue, 2); ?>
                         </h3>
                     </div>
                 </div>
@@ -37,8 +44,7 @@ $profit = $revenue - $expenses;
                 <div class="card card-custom bg-danger text-white">
                     <div class="card-body">
                         <h5>Monthly Expenses</h5>
-                        <h3>$
-                            <?php echo number_format($expenses, 2); ?>
+                        <h3>&#8377;<?php echo number_format($expenses, 2); ?>
                         </h3>
                     </div>
                 </div>
@@ -47,8 +53,7 @@ $profit = $revenue - $expenses;
                 <div class="card card-custom bg-primary text-white">
                     <div class="card-body">
                         <h5>Net Profit</h5>
-                        <h3>$
-                            <?php echo number_format($profit, 2); ?>
+                        <h3>&#8377;<?php echo number_format($profit, 2); ?>
                         </h3>
                     </div>
                 </div>
@@ -104,8 +109,7 @@ $profit = $revenue - $expenses;
                                             <td>
                                                 <?php echo $row['date']; ?>
                                             </td>
-                                            <td>$
-                                                <?php echo number_format($row['total'], 2); ?>
+                                            <td>&#8377;<?php echo number_format($row['total'], 2); ?>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>

@@ -4,6 +4,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 

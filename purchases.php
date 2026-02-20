@@ -1,5 +1,13 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -39,9 +47,7 @@ $purchases = $conn->query($sql);
                                 <td>
                                     <?php echo $row['purchase_date']; ?>
                                 </td>
-                                <td>$
-                                    <?php echo number_format($row['total_amount'], 2); ?>
-                                </td>
+                                <td>&#8377;<?php echo number_format($row['total_amount'], 2); ?></td>
                                 <td><span class="badge bg-<?php echo $row['status'] == 'completed' ? 'success' : 'warning'; ?>">
                                         <?php echo ucfirst($row['status']); ?>
                                     </span></td>

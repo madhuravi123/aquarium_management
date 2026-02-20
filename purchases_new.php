@@ -1,5 +1,13 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -64,7 +72,7 @@ while ($f = $fish->fetch_assoc()) {
 
             <div class="card card-custom mb-3">
                 <div class="card-body text-end">
-                    <h4>Total Amount: $<span id="grandTotal">0.00</span></h4>
+                    <h4>Total Amount: &#8377;<span id="grandTotal">0.00</span></h4>
                     <input type="hidden" name="total_amount" id="totalAmountInput">
                     <button type="submit" name="save_purchase" class="btn btn-success btn-lg">Complete Purchase</button>
                 </div>

@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -37,6 +41,7 @@ while ($f = $fish->fetch_assoc()) {
                                 <label>Payment Method</label>
                                 <select name="payment_method" class="form-select">
                                     <option value="cash">Cash</option>
+                                    <option value="upi">UPI</option>
                                     <option value="card">Card</option>
                                     <option value="online">Online</option>
                                 </select>
@@ -74,7 +79,7 @@ while ($f = $fish->fetch_assoc()) {
 
                     <div class="card card-custom">
                         <div class="card-body text-end">
-                            <h4>Total: $<span id="grandTotal">0.00</span></h4>
+                            <h4>Total: &#8377;<span id="grandTotal">0.00</span></h4>
                             <input type="hidden" name="total_amount" id="totalInput">
                             <button type="submit" name="save_sale" class="btn btn-success btn-lg">Complete Sale</button>
                         </div>

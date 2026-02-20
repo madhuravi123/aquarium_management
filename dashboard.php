@@ -4,6 +4,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 // Fetch simple stats
 $fish_count = $conn->query("SELECT SUM(stock_quantity) as total FROM fish")->fetch_assoc()['total'] ?? 0;
@@ -55,8 +59,7 @@ include 'includes/header.php';
                 <div class="card card-custom bg-warning text-white">
                     <div class="card-body">
                         <h5 class="card-title">Today's Sales</h5>
-                        <h2 class="display-6">$
-                            <?php echo number_format($sales_today, 2); ?>
+                        <h2 class="display-6">&#8377;<?php echo number_format($sales_today, 2); ?>
                         </h2>
                         <a href="sales.php" class="text-white">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>

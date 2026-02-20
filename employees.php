@@ -4,6 +4,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -52,9 +56,7 @@ $employees = $conn->query("SELECT * FROM employees ORDER BY id DESC");
                                 <td>
                                     <?php echo $row['phone']; ?>
                                 </td>
-                                <td>$
-                                    <?php echo number_format($row['salary'], 2); ?>
-                                </td>
+                                <td>&#8377;<?php echo number_format($row['salary'], 2); ?></td>
                                 <td>
                                     <?php echo $row['hire_date']; ?>
                                 </td>

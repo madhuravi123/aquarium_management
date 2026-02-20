@@ -4,6 +4,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -50,9 +54,7 @@ $tanks = $conn->query("SELECT * FROM tanks WHERE status='active'");
                             <p class="card-text">
                                 <strong>Species:</strong>
                                 <?php echo $row['species']; ?><br>
-                                <strong>Price:</strong> Buy: $
-                                <?php echo $row['purchase_price']; ?> / Sell: $
-                                <?php echo $row['selling_price']; ?><br>
+                                <strong>Price:</strong> Buy: &#8377;<?php echo number_format($row['purchase_price'], 2); ?> / Sell: &#8377;<?php echo number_format($row['selling_price'], 2); ?><br>
                                 <strong>Stock:</strong>
                                 <?php echo $row['stock_quantity']; ?><br>
                                 <strong>Tank:</strong>

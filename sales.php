@@ -1,5 +1,13 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+if ($_SESSION['role'] === 'customer') {
+    header("Location: shop.php");
+    exit();
+}
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
@@ -39,8 +47,7 @@ $sales = $conn->query($sql);
                                 <td>
                                     <?php echo $row['sale_date']; ?>
                                 </td>
-                                <td>$
-                                    <?php echo number_format($row['final_amount'], 2); ?>
+                                <td>&#8377;<?php echo number_format($row['final_amount'], 2); ?>
                                 </td>
                                 <td>
                                     <?php echo ucfirst($row['payment_method']); ?>
