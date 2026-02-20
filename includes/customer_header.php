@@ -32,12 +32,8 @@ if ($is_logged_in && isset($conn)) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Tom Select (searchable/typable dropdowns) -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        .navbar-brand .brand-name { font-weight: 700; font-size: 1.2rem; }
-        .navbar-brand small { font-size: 0.7rem; opacity: 0.85; }
-        .cart-badge { font-size: 0.65rem; }
-        .hero-bg { background: linear-gradient(135deg, #0a3d62 0%, #1e6091 100%); }
-    </style>
+    <!-- Custom CSS -->
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 

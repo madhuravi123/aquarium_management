@@ -68,7 +68,7 @@ include 'includes/customer_header.php';
 
 <div class="container py-4">
     <!-- Welcome Banner -->
-    <div class="bg-primary bg-gradient text-white rounded-3 p-4 mb-4 shadow-sm">
+    <div class="bg-ocean-gradient rounded-3 p-4 mb-4 shadow-premium">
         <div class="row align-items-center">
             <div class="col">
                 <?php if ($is_logged_in): ?>

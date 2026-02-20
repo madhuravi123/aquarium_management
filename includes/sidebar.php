@@ -1,5 +1,5 @@
 <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" style="width: 280px; min-height: 100vh;">
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white sidebar" style="width: 280px; min-height: 100vh;">
     <a href="dashboard.php" class="d-flex align-items-center mb-1 text-white text-decoration-none">
         <i class="fas fa-fish me-2 fs-5"></i>
         <div>
