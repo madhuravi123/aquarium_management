@@ -88,7 +88,7 @@ include 'includes/header.php';
                     <div class="card-body">
                         <a href="sales_new.php" class="btn btn-outline-primary w-100 mb-2">New Sale</a>
                         <a href="purchases_new.php" class="btn btn-outline-success w-100 mb-2">New Purchase</a>
-                        <a href="feed_log.php" class="btn btn-outline-warning w-100">Log Feeding</a>
+                        <a href="feeding.php" class="btn btn-outline-warning w-100">Log Feeding</a>
                     </div>
                 </div>
             </div>
