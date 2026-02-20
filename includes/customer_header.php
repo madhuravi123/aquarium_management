@@ -33,11 +33,11 @@ if ($is_logged_in && isset($conn)) {
     <!-- Tom Select (searchable/typable dropdowns) -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand-lg navbar-dark hero-bg shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="shop.php">
             <i class="fas fa-fish me-2 fs-4"></i>
@@ -86,7 +86,7 @@ if ($is_logged_in && isset($conn)) {
                 <!-- Auth action -->
                 <li class="nav-item ms-lg-2">
                     <?php if ($is_logged_in): ?>
-                        <a class="btn btn-outline-light btn-sm" href="logout.php">
+                        <a class="btn btn-outline-dark btn-sm" href="logout.php">
                             <i class="fas fa-sign-out-alt me-1"></i>Logout
                         </a>
                     <?php else: ?>

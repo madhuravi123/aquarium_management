@@ -4,10 +4,10 @@
         <i class="fas fa-fish me-2 fs-5"></i>
         <div>
             <span class="fs-5 fw-bold">Harini Aquarium</span>
-            <small class="d-block text-secondary" style="font-size:0.7rem;">Fish &amp; Aquarium Shop</small>
+            <small class="d-block text-white-50" style="font-size:0.7rem;">Fish &amp; Aquarium Shop</small>
         </div>
     </a>
-    <small class="text-secondary mb-1" style="font-size:0.7rem;">
+    <small class="text-white-50 mb-1" style="font-size:0.7rem;">
         <i class="fas fa-map-marker-alt me-1"></i>Manjakuppam, Cuddalore – 607001
     </small>
     <hr>

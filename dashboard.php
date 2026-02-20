@@ -69,8 +69,7 @@ include 'includes/header.php';
                 <div class="card card-custom bg-warning text-white">
                     <div class="card-body">
                         <h5 class="card-title">Today's Sales</h5>
-                        <h2 class="display-6" id="sales-today">&#8377;<?php echo number_format($sales_today, 2); ?>
-                        </h2>
+                        <h2 class="display-6" id="sales-today">&#8377;<?php echo number_format($sales_today, 2); ?></h2>
                         <a href="sales.php" class="text-white">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>

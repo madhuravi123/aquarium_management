@@ -89,8 +89,8 @@ $profit = $revenue - $expenses;
                                                 <td>
                                                     <?php echo (int)$row['stock_quantity']; ?>
                                                 </td>
-                                                <td><a href="purchases_new.php"
-                                                        class="btn btn-sm btn-outline-dark">Restock</a></td>
+                                                <td><a href="purchases_new.php?fish_id=<?php echo $row['id']; ?>"
+                                                        class="btn btn-sm btn-primary">Restock</a></td>
                                             </tr>
                                         <?php endwhile; ?>
                                     </tbody>
@@ -204,7 +204,7 @@ $profit = $revenue - $expenses;
                     html += `<tr class="table-danger">
                         <td>${escapeHtml(item.name)}</td>
                         <td>${item.stock_quantity}</td>
-                        <td><a href="purchases_new.php" class="btn btn-sm btn-outline-dark">Restock</a></td>
+                        <td><a href="purchases_new.php?fish_id=${item.id}" class="btn btn-sm btn-primary">Restock</a></td>
                     </tr>`;
                 });
             }

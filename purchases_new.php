@@ -18,6 +18,17 @@ $fish_options = [];
 while ($f = $fish->fetch_assoc()) {
     $fish_options[] = $f;
 }
+// Get pre-selected fish from URL parameter
+$preselected_fish_id = isset($_GET['fish_id']) ? intval($_GET['fish_id']) : null;
+$preselected_fish_price = 0;
+if ($preselected_fish_id) {
+    foreach($fish_options as $f) {
+        if($f['id'] == $preselected_fish_id) {
+            $preselected_fish_price = $f['purchase_price'];
+            break;
+        }
+    }
+}
 ?>
 
 <div class="d-flex">
@@ -119,10 +130,10 @@ while ($f = $fish->fetch_assoc()) {
         const typeSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][type]"]`);
         const fishSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][fish_id]"]`);
         if (typeSel && !typeSel.tomselect) {
-            new TomSelect(typeSel, { allowEmptyOption: false, create: false });
+            new TomSelect(typeSel, { allowEmptyOption: false, create: false, dropdownParent: 'body' });
         }
         if (fishSel && !fishSel.tomselect) {
-            new TomSelect(fishSel, { allowEmptyOption: true, create: false });
+            new TomSelect(fishSel, { allowEmptyOption: true, create: false, dropdownParent: 'body' });
         }
     }
 
@@ -168,5 +179,63 @@ while ($f = $fish->fetch_assoc()) {
 
     // Add one row by default
     addItemRow();
+
+    // Auto-select fish if passed via URL parameter
+    <?php if ($preselected_fish_id): ?>
+    (function() {
+        const preselectedId = "<?php echo $preselected_fish_id; ?>";
+        const preselectedPrice = "<?php echo $preselected_fish_price; ?>";
+        const preselectedName = "<?php 
+            $name = '';
+            foreach($fish_options as $f) {
+                if($f['id'] == $preselected_fish_id) {
+                    $name = $f['name'];
+                    break;
+                }
+            }
+            echo addslashes($name);
+        ?>";
+        
+        // Function to set the fish selection
+        function setPreselectedFish() {
+            const fishSelect = document.querySelector('select[name="items[0][fish_id]"]');
+            const priceInput = document.querySelector('input[name="items[0][unit_price]"]');
+            const qtyInput = document.querySelector('input[name="items[0][quantity]"]');
+            
+            if (!fishSelect) {
+                console.log('Fish select not found, retrying...');
+                setTimeout(setPreselectedFish, 100);
+                return;
+            }
+            
+            console.log('Found fish select, tomselect:', fishSelect.tomselect ? 'yes' : 'no');
+            
+            // Set the underlying select value first
+            fishSelect.value = preselectedId;
+            
+            // Update TomSelect if initialized
+            if (fishSelect.tomselect) {
+                fishSelect.tomselect.setValue(preselectedId);
+                fishSelect.tomselect.refreshOptions();
+            }
+            
+            // Update price and calculate total
+            if (priceInput && preselectedPrice > 0) {
+                priceInput.value = preselectedPrice;
+                const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+                const price = parseFloat(preselectedPrice) || 0;
+                const total = (qty * price).toFixed(2);
+                const totalInput = document.getElementById('total_0');
+                if (totalInput) totalInput.value = total;
+                calcGrandTotal();
+            }
+            
+            console.log('Set fish to:', preselectedName, 'ID:', preselectedId, 'Price:', preselectedPrice);
+        }
+        
+        // Start trying after a short delay
+        setTimeout(setPreselectedFish, 500);
+    })();
+    <?php endif; ?>
 </script>
 <?php include 'includes/footer.php'; ?>

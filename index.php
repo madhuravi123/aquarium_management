@@ -40,9 +40,30 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
             overflow-x: hidden;
         }
 
+        /* Global container breathing space */
+        .container {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding-left: 32px;
+                padding-right: 32px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                padding-left: 48px;
+                padding-right: 48px;
+            }
+        }
+
         /* ── HERO ─────────────────────────────────────────────── */
         .hero {
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             background:
                 radial-gradient(ellipse at 20% 50%, rgba(30,96,145,0.35) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 20%, rgba(13,115,119,0.25) 0%, transparent 55%),
@@ -51,6 +72,7 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
             display: flex;
             align-items: center;
             overflow: hidden;
+            padding: 20px 0;
         }
 
         /* Floating bubbles */
@@ -92,30 +114,32 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
         }
 
         .hero h1 {
-            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 800;
-            line-height: 1.15;
+            line-height: 1.1;
             background: linear-gradient(90deg, #ffffff 0%, #7ecbf5 55%, #14d2c8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 0.5rem;
         }
 
         .hero-tagline {
-            font-size: 1.15rem;
+            font-size: 1rem;
             color: rgba(255,255,255,0.7);
             max-width: 520px;
-            line-height: 1.7;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
         }
 
         .quote-block {
             border-left: 3px solid var(--gold);
-            padding: 10px 18px;
+            padding: 8px 14px;
             background: rgba(243,156,18,0.07);
             border-radius: 0 8px 8px 0;
             font-style: italic;
             color: rgba(255,255,255,0.65);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             max-width: 480px;
         }
 
@@ -123,9 +147,9 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
             background: linear-gradient(135deg, #14d2c8 0%, #1e6091 100%);
             color: #fff;
             border: none;
-            padding: 14px 36px;
+            padding: 12px 28px;
             border-radius: 50px;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
@@ -141,9 +165,9 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
             background: transparent;
             color: rgba(255,255,255,0.75);
             border: 1.5px solid rgba(255,255,255,0.3);
-            padding: 13px 30px;
+            padding: 11px 24px;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             transition: all 0.3s ease;
         }
@@ -157,33 +181,34 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
         .stats-bar {
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 18px 28px;
+            border-radius: 12px;
+            padding: 12px 20px;
             display: flex;
-            gap: 40px;
+            gap: 30px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 3rem;
+            margin-top: 1.5rem;
             backdrop-filter: blur(8px);
         }
         .stat-item { text-align: center; }
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #14d2c8;
             line-height: 1;
         }
-        .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+        .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
 
         /* ── FEATURES SECTION ─────────────────────────────────── */
-        .features { background: #060d1a; padding: 80px 0; }
+        .features { background: #060d1a; padding: 100px 0 120px; }
         .feature-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.07);
             border-radius: 16px;
-            padding: 32px 24px;
+            padding: 40px 28px;
             text-align: center;
             transition: transform 0.3s ease, border-color 0.3s ease;
+            height: 100%;
         }
         .feature-card:hover {
             transform: translateY(-6px);
@@ -201,7 +226,7 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
         .feature-card p  { color: rgba(255,255,255,0.5); font-size: 0.9rem; margin: 0; }
 
         /* ── QUOTES CAROUSEL ──────────────────────────────────── */
-        .quotes-section { background: var(--ocean-dark); padding: 60px 0; text-align: center; }
+        .quotes-section { background: var(--ocean-dark); padding: 80px 0 100px; text-align: center; }
         .quote-text {
             font-size: 1.3rem;
             font-style: italic;
@@ -228,8 +253,8 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
             z-index: 2;
         }
         .fish-circle {
-            width: clamp(280px, 38vw, 480px);
-            height: clamp(280px, 38vw, 480px);
+            width: clamp(220px, 32vw, 380px);
+            height: clamp(220px, 32vw, 380px);
             background: radial-gradient(circle at 40% 40%, rgba(20,210,200,0.18), rgba(10,61,98,0.5));
             border: 1px solid rgba(20,210,200,0.2);
             border-radius: 50%;
@@ -239,7 +264,7 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
             box-shadow: 0 0 80px rgba(20,210,200,0.12), inset 0 0 60px rgba(30,96,145,0.3);
         }
         .fish-circle .main-icon {
-            font-size: clamp(6rem, 14vw, 11rem);
+            font-size: clamp(5rem, 12vw, 9rem);
             opacity: 0.75;
             color: #7ecbf5;
             filter: drop-shadow(0 0 30px rgba(126,203,245,0.5));
@@ -297,13 +322,13 @@ foreach ($bubble_sizes as $k => $sz) {
                     exotic fish, delivered with care from the heart of Tamil Nadu.
                 </p>
 
-                <div class="quote-block mt-4 mb-4">
+                <div class="quote-block mt-3 mb-3">
                     "An aquarium is a window to the world beneath the waves —
                     bringing the ocean's calm into your home."
                 </div>
 
                 <!-- CTA Buttons -->
-                <div class="d-flex flex-wrap gap-3 mt-4">
+                <div class="d-flex flex-wrap gap-3 mt-3">
                     <a href="shop.php" class="btn btn-shop">
                         <i class="fas fa-fish me-2"></i>Browse Fish Shop
                     </a>
@@ -313,7 +338,7 @@ foreach ($bubble_sizes as $k => $sz) {
                 </div>
 
                 <!-- Stats bar -->
-                <div class="stats-bar mt-4">
+                <div class="stats-bar mt-3">
                     <div class="stat-item">
                         <div class="stat-number"><?php echo $fish_count; ?>+</div>
                         <div class="stat-label">Fish In Stock</div>
@@ -352,7 +377,7 @@ foreach ($bubble_sizes as $k => $sz) {
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold" style="color:#fff;">Why Choose Harini Aquarium?</h2>
-            <p class="text-muted">Tamil Nadu's trusted source for premium fish since 2018</p>
+            <p class="text-muted" style="color:rgba(255,255,255,0.7) !important;">Tamil Nadu's trusted source for premium fish since 2018</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
@@ -404,7 +429,7 @@ foreach ($bubble_sizes as $k => $sz) {
 <!-- ═══ QUOTES CAROUSEL ══════════════════════════════════════════════════════ -->
 <section class="quotes-section">
     <div class="container">
-        <div id="quoteCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div id="quoteCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <p class="quote-text">
@@ -462,5 +487,19 @@ foreach ($bubble_sizes as $k => $sz) {
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Initialize quote carousel with auto-play
+    document.addEventListener('DOMContentLoaded', function() {
+        var quoteCarousel = document.getElementById('quoteCarousel');
+        if (quoteCarousel) {
+            new bootstrap.Carousel(quoteCarousel, {
+                interval: 4000,
+                wrap: true,
+                touch: true,
+                ride: 'carousel'
+            });
+        }
+    });
+</script>
 </body>
 </html>

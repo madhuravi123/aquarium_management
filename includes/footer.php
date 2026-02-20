@@ -11,7 +11,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('select.form-select:not([data-no-ts])').forEach(function (el) {
         if (!el.tomselect) {
-            new TomSelect(el, { allowEmptyOption: true, create: false });
+            new TomSelect(el, { 
+                allowEmptyOption: true, 
+                create: false,
+                dropdownParent: 'body'
+            });
         }
     });
 });

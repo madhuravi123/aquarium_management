@@ -215,6 +215,12 @@ body {
     animation: pulse 2s ease-in-out infinite;
 }
 
+/* Brighter sidebar text */
+.sidebar small.text-white-50 {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
 @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
     50%      { transform: scale(1.08); opacity: 0.9; }
@@ -230,8 +236,29 @@ body {
     box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
     background: white;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
+}
+
+/* Dashboard stat cards - uniform height (only colored background cards) */
+.card-custom.bg-info .card-body,
+.card-custom.bg-success .card-body,
+.card-custom.bg-warning .card-body,
+.card-custom.bg-danger .card-body {
+    height: 145px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem;
+}
+
+.card-custom.bg-info .card-body .display-6,
+.card-custom.bg-success .card-body .display-6,
+.card-custom.bg-warning .card-body .display-6,
+.card-custom.bg-danger .card-body .display-6 {
+    font-size: 2rem;
+    margin: 0;
+    line-height: 1.2;
 }
 
 .card-custom::before,
@@ -611,19 +638,36 @@ textarea.form-control:focus {
 }
 
 .table thead th {
-    background: linear-gradient(135deg, rgba(30, 96, 145, 0.08), rgba(20, 210, 200, 0.08));
-    color: var(--dark);
+    background: linear-gradient(135deg, var(--ocean-primary) 0%, var(--ocean-teal) 100%);
+    color: white;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 1px;
     border: none;
     padding: 1rem 0.75rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.table thead th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.table thead th:last-child {
+    border-radius: 0 8px 0 0;
 }
 
 .table tbody tr {
     transition: all var(--transition-fast);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(30, 96, 145, 0.08);
+}
+
+.table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 8px;
+}
+
+.table tbody tr:last-child td:last-child {
+    border-radius: 0 0 8px 0;
 }
 
 .table tbody tr:hover {
@@ -639,7 +683,11 @@ textarea.form-control:focus {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background: rgba(0, 0, 0, 0.015);
+    background: rgba(30, 96, 145, 0.04);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background: white;
 }
 
 .table-hover tbody tr:hover {
@@ -1154,7 +1202,62 @@ img {
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
-   24. PERFORMANCE OPTIMIZATIONS
+   24. DROPDOWN OVERFLOW FIX — Prevent clipping in cards/tables
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* TomSelect dropdown - high z-index to appear above all cards */
+.ts-wrapper {
+    position: relative;
+    z-index: 1000;
+}
+
+.ts-wrapper.dropdown-active {
+    z-index: 10000 !important;
+}
+
+.ts-dropdown {
+    z-index: 10001 !important;
+    position: absolute !important;
+}
+
+/* Ensure card-body doesn't clip content */
+.card-body {
+    overflow: visible !important;
+}
+
+/* Table containers should not clip */
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+/* Ensure tables and their cells don't clip dropdowns */
+.table,
+.table tbody,
+.table tbody tr,
+.table tbody tr td {
+    overflow: visible;
+}
+
+/* TomSelect wrapper needs relative positioning in tables */
+td .ts-wrapper {
+    position: relative;
+    overflow: visible;
+}
+
+/* Ensure ts-control doesn't clip */
+.ts-wrapper .ts-control {
+    overflow: visible;
+}
+
+/* Cards should not create new stacking context that blocks dropdowns */
+.card,
+.card-custom {
+    z-index: auto;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   25. PERFORMANCE OPTIMIZATIONS
    ──────────────────────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *,

@@ -122,7 +122,7 @@ while ($f = $fish->fetch_assoc()) {
         // Tom Select fires the native change event.
         const fishSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][fish_id]"]`);
         if (fishSel && !fishSel.tomselect) {
-            new TomSelect(fishSel, { allowEmptyOption: true, create: false });
+            new TomSelect(fishSel, { allowEmptyOption: true, create: false, dropdownParent: 'body' });
         }
     }
 
