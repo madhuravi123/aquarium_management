@@ -2,17 +2,16 @@
 function seed_dummy_data($conn) {
 
     // =====================================================================
-    // 1. USERS - Admin (Harini) + Demo Customer
+    // 1. USERS - Admin (Harini) + Staff (Kalpana, Preethi) — customers self-register
     // =====================================================================
-    $admin_pass   = password_hash('harini@123', PASSWORD_DEFAULT);
-    $staff_pass   = password_hash('staff@123', PASSWORD_DEFAULT);
-    $customer_pass = password_hash('demo@123', PASSWORD_DEFAULT);
+    $admin_pass    = password_hash('harini@123',  PASSWORD_DEFAULT);
+    $kalpana_pass  = password_hash('kalpana@123', PASSWORD_DEFAULT);
+    $preethi_pass  = password_hash('preethi@123', PASSWORD_DEFAULT);
 
     $conn->query("INSERT INTO users (username, full_name, password, role, phone, address) VALUES
-        ('harini',  'Harini',           '$admin_pass',    'admin',    '9876543210', 'St. Joseph College of Arts and Science, Manjakuppam, Cuddalore – 607001'),
-        ('rajan',   'Rajan Murugan',    '$staff_pass',    'staff',    '9876543211', 'Cuddalore'),
-        ('preethi', 'Preethi Kumari',   '$staff_pass',    'staff',    '9876543212', 'Cuddalore'),
-        ('demo',    'Demo Customer',    '$customer_pass', 'customer', '9876500001', '12 Anna Nagar, Cuddalore – 607001')
+        ('harini',  'Harini',           '$admin_pass',   'admin',    '9876543210', 'St. Joseph College of Arts and Science, Manjakuppam, Cuddalore – 607001'),
+        ('kalpana', 'Kalpana',          '$kalpana_pass', 'staff',    '9876543211', 'Cuddalore'),
+        ('preethi', 'Preethi Kumari',   '$preethi_pass', 'staff',    '9876543212', 'Cuddalore')
     ");
 
     // =====================================================================
