@@ -79,7 +79,7 @@ $records = $conn->query("SELECT w.*, t.name as tank_name, u.username FROM water_
                                 <?php while ($row = $records->fetch_assoc()): ?>
                                     <tr>
                                         <td>
-                                            <?php echo date('M d, H:i', strtotime($row['recorded_at'])); ?>
+                                            <?php echo date('M d, g:i A', strtotime($row['recorded_at'])); ?>
                                         </td>
                                         <td>
                                             <?php echo $row['tank_name']; ?>

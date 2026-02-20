@@ -71,7 +71,7 @@ $logs = $conn->query("SELECT fl.*, t.name as tank_name, u.username FROM feeding_
                                 <?php while ($row = $logs->fetch_assoc()): ?>
                                     <tr>
                                         <td>
-                                            <?php echo date('d M H:i', strtotime($row['fed_at'])); ?>
+                                            <?php echo date('d M g:i A', strtotime($row['fed_at'])); ?>
                                         </td>
                                         <td>
                                             <?php echo $row['tank_name']; ?>

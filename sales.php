@@ -129,7 +129,12 @@ $today_total = $conn->query(
                                 <td><?php echo $row['id']; ?></td>
                                 <td><?php echo htmlspecialchars($row['customer_name'] ?? 'Walk-in Customer'); ?></td>
                                 <td>
-                                    <?php echo date('d M Y', strtotime($row['sale_date'])); ?>
+                                    <?php
+                                    $ts   = strtotime($row['sale_date']);
+                                    $time = date('g:i A', $ts);
+                                    echo date('d M Y', $ts);
+                                    if (date('H:i', $ts) !== '00:00') echo ' <span class="text-muted small">' . $time . '</span>';
+                                    ?>
                                     <?php if ($is_today): ?>
                                         <span class="badge bg-success ms-1" style="font-size:.65rem;">Today</span>
                                     <?php endif; ?>

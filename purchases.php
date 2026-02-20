@@ -45,7 +45,12 @@ $purchases = $conn->query($sql);
                                     <?php echo $row['supplier_name']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['purchase_date']; ?>
+                                    <?php
+                                    $pts  = strtotime($row['purchase_date']);
+                                    $ptim = date('H:i', $pts);
+                                    echo date('d M Y', $pts);
+                                    if ($ptim !== '00:00') echo ' <span class="text-muted small">' . date('g:i A', $pts) . '</span>';
+                                    ?>
                                 </td>
                                 <td>&#8377;<?php echo number_format($row['total_amount'], 2); ?></td>
                                 <td><span class="badge bg-<?php echo $row['status'] == 'completed' ? 'success' : 'warning'; ?>">

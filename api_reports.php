@@ -78,7 +78,7 @@ $pending_purchases_result = $conn->query("SELECT COUNT(*) as total FROM purchase
 $response['pending_purchases'] = $pending_purchases_result->fetch_assoc()['total'] ?? 0;
 
 // Timestamp for last update
-$response['last_updated'] = date('Y-m-d H:i:s');
+$response['last_updated'] = date('d M Y, g:i A');
 
 echo json_encode($response);
 ?>

@@ -40,7 +40,7 @@ $logs = $conn->query("SELECT m.*, t.name as tank_name, u.username FROM maintenan
                         <?php while ($row = $logs->fetch_assoc()): ?>
                             <tr>
                                 <td>
-                                    <?php echo date('d M Y H:i', strtotime($row['maintenance_date'])); ?>
+                                    <?php echo date('d M Y g:i A', strtotime($row['maintenance_date'])); ?>
                                 </td>
                                 <td>
                                     <?php echo $row['tank_name']; ?>

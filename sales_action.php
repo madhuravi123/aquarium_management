@@ -12,7 +12,9 @@ require_once 'config/db_connect.php';
 
 if (isset($_POST['save_sale'])) {
     $customer_id = !empty($_POST['customer_id']) ? intval($_POST['customer_id']) : NULL;
-    $sale_date = $_POST['sale_date'];
+    // Always store the sale date combined with the current time of recording.
+    $sale_date_raw = trim($_POST['sale_date'] ?? date('Y-m-d'));
+    $sale_date = $sale_date_raw . ' ' . date('H:i:s');
     $payment_method = $_POST['payment_method'];
     $total_amount = floatval($_POST['total_amount']);
     $items = $_POST['items'] ?? [];

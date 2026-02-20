@@ -70,7 +70,7 @@ $sick_fish = $conn->query("SELECT COUNT(*) as total FROM fish_health WHERE statu
 $response['sick_fish'] = $sick_fish->fetch_assoc()['total'] ?? 0;
 
 // Timestamp for last update
-$response['last_updated'] = date('Y-m-d H:i:s');
+$response['last_updated'] = date('d M Y, g:i A');
 
 echo json_encode($response);
 ?>

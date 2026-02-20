@@ -33,7 +33,7 @@ $profit = $revenue - $expenses;
                     <h2 class="mb-0">Reports & Analytics</h2>
                     <div class="text-end">
                         <span class="live-indicator">Live</span>
-                        <div id="last-updated" class="mt-1" style="font-size: 0.75rem; color: #6c757d;">Last updated: <?php echo date('Y-m-d H:i:s'); ?></div>
+                        <div id="last-updated" class="mt-1" style="font-size: 0.75rem; color: #6c757d;">Last updated: <?php echo date('d M Y, g:i A'); ?></div>
                     </div>
                 </div>
 

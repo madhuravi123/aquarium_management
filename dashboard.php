@@ -29,7 +29,7 @@ include 'includes/header.php';
             </div>
             <div class="text-end">
                 <span class="live-indicator">Live</span>
-                <div id="last-updated" class="mt-1">Last updated: <?php echo date('Y-m-d H:i:s'); ?></div>
+                <div id="last-updated" class="mt-1">Last updated: <?php echo date('d M Y, g:i A'); ?></div>
             </div>
         </div>
 
