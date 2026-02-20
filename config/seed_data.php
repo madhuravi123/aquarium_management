@@ -80,6 +80,21 @@ function seed_dummy_data($conn) {
         ('Red Tail Black Shark',    'Epalzeorhynchos bicolor',   'freshwater', 'Small (12cm)',   'Black/Red',       130.00,  300.00,  10,  2)
     ");
 
+    // Saltwater & Brackish varieties
+    $conn->query("INSERT INTO fish (name, species, water_type, size, color, purchase_price, selling_price, stock_quantity, tank_id) VALUES
+        ('Clownfish',            'Amphiprion ocellaris',       'saltwater', 'Small (8cm)',    'Orange/White',        400.00,  800.00, 20, 3),
+        ('Blue Tang',            'Paracanthurus hepatus',      'saltwater', 'Medium (12cm)',  'Blue/Yellow',        1500.00, 2500.00,  8, 3),
+        ('Lionfish',             'Pterois volitans',           'saltwater', 'Large (25cm)',   'Red/White/Black',    1800.00, 3000.00,  5, 4),
+        ('Mandarin Dragonet',    'Synchiropus splendidus',     'saltwater', 'Tiny (6cm)',     'Blue/Orange/Green',  1200.00, 2000.00,  6, 3),
+        ('Flame Angelfish',      'Centropyge loricula',        'saltwater', 'Small (10cm)',   'Red/Orange',         2000.00, 3500.00,  4, 4),
+        ('Royal Gramma',         'Gramma loreto',              'saltwater', 'Small (8cm)',    'Purple/Yellow',       800.00, 1500.00, 10, 4),
+        ('Archer Fish',          'Toxotes jaculatrix',         'brackish',  'Medium (20cm)',  'Silver/Black',        300.00,  600.00, 15, 5),
+        ('Figure Eight Puffer',  'Tetraodon biocellatus',      'brackish',  'Small (8cm)',    'Yellow/Green/Black',  400.00,  750.00, 10, 5),
+        ('Mono Argentus',        'Monodactylus argenteus',     'brackish',  'Medium (18cm)',  'Silver/Black',        200.00,  450.00, 12, 5),
+        ('Green Spotted Puffer', 'Tetraodon nigroviridis',     'brackish',  'Small (7cm)',    'Green/Black',         350.00,  650.00,  8, 5),
+        ('Mudskipper',           'Periophthalmus barbarus',    'brackish',  'Small (15cm)',   'Brown/Green',         250.00,  500.00, 10, 5)
+    ");
+
     // =====================================================================
     // 5. CUSTOMERS (22 Tamil Nadu customers)
     // =====================================================================

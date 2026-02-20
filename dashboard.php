@@ -13,7 +13,11 @@ require_once 'config/db_connect.php';
 $fish_count = $conn->query("SELECT SUM(stock_quantity) as total FROM fish")->fetch_assoc()['total'] ?? 0;
 $tanks_count = $conn->query("SELECT COUNT(*) as total FROM tanks")->fetch_assoc()['total'] ?? 0;
 $sales_today = $conn->query("SELECT SUM(final_amount) as total FROM sales WHERE DATE(sale_date) = CURDATE()")->fetch_assoc()['total'] ?? 0;
-$alerts_count = $conn->query("SELECT COUNT(*) as total FROM notifications WHERE is_read = 0")->fetch_assoc()['total'] ?? 0;
+// Alerts = low stock + sick fish + non-active tanks (same formula as api_dashboard.php)
+$alert_low    = (int)($conn->query("SELECT COUNT(*) as t FROM fish WHERE stock_quantity <= 5")->fetch_assoc()['t'] ?? 0);
+$alert_sick   = (int)($conn->query("SELECT COUNT(*) as t FROM fish_health WHERE status IN ('sick','recovering')")->fetch_assoc()['t'] ?? 0);
+$alert_tanks  = (int)($conn->query("SELECT COUNT(*) as t FROM tanks WHERE status != 'active'")->fetch_assoc()['t'] ?? 0);
+$alerts_count = $alert_low + $alert_sick + $alert_tanks;
 
 include 'includes/header.php';
 ?>
@@ -29,7 +33,7 @@ include 'includes/header.php';
             </div>
             <div class="text-end">
                 <span class="live-indicator">Live</span>
-                <div id="last-updated" class="mt-1">Last updated: <?php echo date('d M Y, g:i A'); ?></div>
+                <div id="last-updated" class="mt-1">Last updated: —</div>
             </div>
         </div>
 
@@ -216,6 +220,18 @@ include 'includes/header.php';
             updateDashboard(); // Immediate update when tab becomes visible
         }
     });
+
+    // Live clock — updates every second so "Last updated" always shows current time
+    function tickClock() {
+        const el = document.getElementById('last-updated');
+        if (!el) return;
+        const now = new Date();
+        const opts = { day: '2-digit', month: 'short', year: 'numeric',
+                       hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true };
+        el.textContent = 'Last updated: ' + now.toLocaleString('en-IN', opts);
+    }
+    setInterval(tickClock, 1000);
+    tickClock(); // run immediately on load
 
     // Start on page load
     if (document.readyState === 'loading') {

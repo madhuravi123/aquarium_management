@@ -53,8 +53,18 @@ if (!empty($params)) {
     $fish_result = $conn->query($sql);
 }
 
+// Current cart quantities — used to pre-fill stepper state on page load
+$cart_qtys = [];
+if ($is_logged_in) {
+    $cq = $conn->query("SELECT fish_id, quantity FROM cart WHERE user_id = " . (int)$_SESSION['user_id']);
+    while ($cq && $r = $cq->fetch_assoc()) $cart_qtys[$r['fish_id']] = (int)$r['quantity'];
+} else {
+    $cart_qtys = array_map('intval', $_SESSION['guest_cart'] ?? []);
+}
+
 include 'includes/customer_header.php';
 ?>
+<script>window._CSRF = <?= json_encode(csrf_token()) ?>;</script>
 
 <div class="container py-4">
     <!-- Welcome Banner -->
@@ -198,18 +208,25 @@ include 'includes/customer_header.php';
                                 <small class="text-muted">Stock: <?php echo $fish['stock_quantity']; ?></small>
                             </div>
 
-                            <!-- Add to Cart Form -->
-                            <form action="cart_action.php" method="POST" class="d-flex gap-2">
-                                <?php echo csrf_field(); ?>
-                                <input type="hidden" name="action" value="add">
-                                <input type="hidden" name="fish_id" value="<?php echo $fish['id']; ?>">
-                                <input type="number" name="quantity" value="1" min="1"
-                                       max="<?php echo $fish['stock_quantity']; ?>"
-                                       class="form-control form-control-sm" style="width:65px;">
-                                <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
-                                    <i class="fas fa-cart-plus me-1"></i>Add
+                            <!-- Cart Stepper (Swiggy-style) -->
+                            <?php $in_cart = $cart_qtys[$fish['id']] ?? 0; ?>
+                            <div class="fish-cart-ctrl"
+                                 data-id="<?php echo $fish['id']; ?>"
+                                 data-max="<?php echo $fish['stock_quantity']; ?>">
+                                <button type="button"
+                                        class="btn btn-success btn-sm w-100 btn-fc-add<?php echo $in_cart > 0 ? ' d-none' : ''; ?>"
+                                        style="border-radius:50px;font-weight:600;">
+                                    <i class="fas fa-plus me-1"></i>Add
                                 </button>
-                            </form>
+                                <div class="fc-stepper<?php echo $in_cart > 0 ? '' : ' d-none'; ?>">
+                                    <div class="d-flex align-items-center justify-content-between"
+                                         style="background:#198754;border-radius:50px;padding:5px 10px;">
+                                        <button type="button" class="fc-btn fc-minus">&#8722;</button>
+                                        <span class="fc-qty text-white fw-bold fs-6"><?php echo $in_cart; ?></span>
+                                        <button type="button" class="fc-btn fc-plus">&#43;</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,5 +255,107 @@ include 'includes/customer_header.php';
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+/* Swiggy-style +/- stepper buttons */
+.fc-btn {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.15rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    transition: background 0.15s;
+}
+.fc-btn:hover  { background: rgba(255,255,255,0.42); }
+.fc-btn:active { background: rgba(255,255,255,0.60); transform: scale(0.88); }
+</style>
+
+<script>
+(function () {
+    const CSRF = window._CSRF || '';
+
+    function postCart(data) {
+        var fd = new FormData();
+        fd.append('csrf_token', CSRF);
+        Object.keys(data).forEach(function (k) { fd.append(k, data[k]); });
+        fetch('cart_action.php', { method: 'POST', body: fd });
+    }
+
+    function updateBadge(delta) {
+        var badge = document.getElementById('cart-count-badge');
+        if (!badge) return;
+        var count = Math.max(0, (parseInt(badge.textContent) || 0) + delta);
+        badge.textContent = count;
+        badge.classList.toggle('d-none', count === 0);
+    }
+
+    document.querySelectorAll('.fish-cart-ctrl').forEach(function (ctrl) {
+        var fishId   = ctrl.dataset.id;
+        var maxQty   = parseInt(ctrl.dataset.max) || 0;
+        var addBtn   = ctrl.querySelector('.btn-fc-add');
+        var stepper  = ctrl.querySelector('.fc-stepper');
+        var minusBtn = ctrl.querySelector('.fc-minus');
+        var plusBtn  = ctrl.querySelector('.fc-plus');
+        var qtyEl    = ctrl.querySelector('.fc-qty');
+
+        var qty = parseInt(qtyEl.textContent) || 0;
+
+        addBtn.addEventListener('click', function () {
+            if (maxQty < 1) return;
+            qty = 1;
+            qtyEl.textContent = qty;
+            addBtn.classList.add('d-none');
+            stepper.classList.remove('d-none');
+            postCart({ action: 'add', fish_id: fishId, quantity: 1 });
+            updateBadge(1);
+        });
+
+        plusBtn.addEventListener('click', function () {
+            if (qty >= maxQty) return;
+            qty++;
+            qtyEl.textContent = qty;
+            postCart({ action: 'update', fish_id: fishId, quantity: qty });
+            updateBadge(1);
+        });
+
+        minusBtn.addEventListener('click', function () {
+            if (qty <= 0) return;
+            qty--;
+            if (qty === 0) {
+                stepper.classList.add('d-none');
+                addBtn.classList.remove('d-none');
+                postCart({ action: 'remove', fish_id: fishId });
+            } else {
+                qtyEl.textContent = qty;
+                postCart({ action: 'update', fish_id: fishId, quantity: qty });
+            }
+            updateBadge(-1);
+        });
+
+        // Clicking anywhere on the card (outside the stepper) also triggers Add
+        var card = ctrl.closest('.card');
+        if (card) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', function (e) {
+                if (ctrl.contains(e.target)) return; // ignore clicks inside stepper area
+                if (!addBtn.classList.contains('d-none')) {
+                    addBtn.click(); // first click: add
+                } else {
+                    plusBtn.click(); // subsequent clicks: increment
+                }
+            });
+        }
+    });
+})();
+</script>
 </body>
 </html>

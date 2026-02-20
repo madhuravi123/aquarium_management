@@ -12,7 +12,9 @@ require_once 'config/db_connect.php';
 
 if (isset($_POST['save_purchase'])) {
     $supplier_id = intval($_POST['supplier_id']);
-    $purchase_date = $_POST['purchase_date'];
+    // Always combine the chosen date with the current time of recording.
+    $purchase_date_raw = trim($_POST['purchase_date'] ?? date('Y-m-d'));
+    $purchase_date = $purchase_date_raw . ' ' . date('H:i:s');
     $total_amount = floatval($_POST['total_amount']);
     $items = $_POST['items'] ?? [];
 

@@ -81,11 +81,9 @@ if ($is_logged_in && isset($conn)) {
                 <li class="nav-item">
                     <a class="nav-link position-relative <?php echo $current_page=='cart.php' ? 'active fw-semibold' : ''; ?>" href="cart.php">
                         <i class="fas fa-shopping-cart me-1"></i>Cart
-                        <?php if ($cart_count > 0): ?>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
-                                <?php echo $cart_count; ?>
-                            </span>
-                        <?php endif; ?>
+                        <span id="cart-count-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge<?php echo $cart_count == 0 ? ' d-none' : ''; ?>">
+                            <?php echo $cart_count; ?>
+                        </span>
                     </a>
                 </li>
 

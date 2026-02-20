@@ -23,11 +23,46 @@
     <?php endif; ?>
 
     <ul class="nav nav-pills flex-column mb-auto">
+
+        <!-- ① Overview -->
         <li class="nav-item">
             <a href="dashboard.php" class="nav-link text-white <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
             </a>
         </li>
+        <li>
+            <a href="reports.php" class="nav-link text-white <?php echo $current_page == 'reports.php' ? 'active' : ''; ?>">
+                <i class="fas fa-chart-line me-2"></i> Reports
+            </a>
+        </li>
+
+        <li><hr class="text-secondary my-1"></li>
+
+        <!-- ② Business -->
+        <li>
+            <a href="sales.php" class="nav-link text-white <?php echo ($current_page == 'sales.php' || $current_page == 'sales_new.php') ? 'active' : ''; ?>">
+                <i class="fas fa-shopping-cart me-2"></i> Sales
+            </a>
+        </li>
+        <li>
+            <a href="purchases.php" class="nav-link text-white <?php echo ($current_page == 'purchases.php' || $current_page == 'purchases_new.php' || $current_page == 'purchase_view.php') ? 'active' : ''; ?>">
+                <i class="fas fa-truck me-2"></i> Purchases
+            </a>
+        </li>
+        <li>
+            <a href="customers.php" class="nav-link text-white <?php echo $current_page == 'customers.php' ? 'active' : ''; ?>">
+                <i class="fas fa-users me-2"></i> Customers
+            </a>
+        </li>
+        <li>
+            <a href="suppliers.php" class="nav-link text-white <?php echo $current_page == 'suppliers.php' ? 'active' : ''; ?>">
+                <i class="fas fa-industry me-2"></i> Suppliers
+            </a>
+        </li>
+
+        <li><hr class="text-secondary my-1"></li>
+
+        <!-- ③ Aquarium Operations -->
         <li>
             <a href="tanks.php" class="nav-link text-white <?php echo ($current_page == 'tanks.php' || $current_page == 'tanks_edit.php') ? 'active' : ''; ?>">
                 <i class="fas fa-box me-2"></i> Tanks
@@ -58,28 +93,10 @@
                 <i class="fas fa-tools me-2"></i> Maintenance
             </a>
         </li>
+
         <li><hr class="text-secondary my-1"></li>
-        <li>
-            <a href="sales.php" class="nav-link text-white <?php echo ($current_page == 'sales.php' || $current_page == 'sales_new.php') ? 'active' : ''; ?>">
-                <i class="fas fa-shopping-cart me-2"></i> Sales
-            </a>
-        </li>
-        <li>
-            <a href="purchases.php" class="nav-link text-white <?php echo ($current_page == 'purchases.php' || $current_page == 'purchases_new.php') ? 'active' : ''; ?>">
-                <i class="fas fa-truck me-2"></i> Purchases
-            </a>
-        </li>
-        <li>
-            <a href="customers.php" class="nav-link text-white <?php echo $current_page == 'customers.php' ? 'active' : ''; ?>">
-                <i class="fas fa-users me-2"></i> Customers
-            </a>
-        </li>
-        <li>
-            <a href="suppliers.php" class="nav-link text-white <?php echo $current_page == 'suppliers.php' ? 'active' : ''; ?>">
-                <i class="fas fa-industry me-2"></i> Suppliers
-            </a>
-        </li>
-        <li><hr class="text-secondary my-1"></li>
+
+        <!-- ④ Admin -->
         <li>
             <a href="employees.php" class="nav-link text-white <?php echo $current_page == 'employees.php' ? 'active' : ''; ?>">
                 <i class="fas fa-id-badge me-2"></i> Employees
@@ -88,11 +105,6 @@
         <li>
             <a href="expenses.php" class="nav-link text-white <?php echo $current_page == 'expenses.php' ? 'active' : ''; ?>">
                 <i class="fas fa-file-invoice-dollar me-2"></i> Expenses
-            </a>
-        </li>
-        <li>
-            <a href="reports.php" class="nav-link text-white <?php echo $current_page == 'reports.php' ? 'active' : ''; ?>">
-                <i class="fas fa-chart-line me-2"></i> Reports
             </a>
         </li>
         <li>
@@ -111,6 +123,7 @@
                 ?>
             </a>
         </li>
+
     </ul>
     <hr>
     <div class="dropdown">

@@ -30,9 +30,12 @@ $response['tanks_count'] = $tanks_result->fetch_assoc()['total'] ?? 0;
 $sales_result = $conn->query("SELECT SUM(final_amount) as total FROM sales WHERE DATE(sale_date) = CURDATE()");
 $response['sales_today'] = $sales_result->fetch_assoc()['total'] ?? 0;
 
-// Unread Alerts Count
-$alerts_result = $conn->query("SELECT COUNT(*) as total FROM notifications WHERE is_read = 0");
-$response['alerts_count'] = $alerts_result->fetch_assoc()['total'] ?? 0;
+// Alerts Count = low stock fish + sick/recovering fish + non-active tanks
+// (These are real operational issues that always need attention)
+$alert_low   = (int)($conn->query("SELECT COUNT(*) as t FROM fish WHERE stock_quantity <= 5")->fetch_assoc()['t'] ?? 0);
+$alert_sick  = (int)($conn->query("SELECT COUNT(*) as t FROM fish_health WHERE status IN ('sick','recovering')")->fetch_assoc()['t'] ?? 0);
+$alert_tanks = (int)($conn->query("SELECT COUNT(*) as t FROM tanks WHERE status != 'active'")->fetch_assoc()['t'] ?? 0);
+$response['alerts_count'] = $alert_low + $alert_sick + $alert_tanks;
 
 // Additional live data - Pending Operations
 // Pending/Maintenance Tanks
