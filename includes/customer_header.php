@@ -1,19 +1,26 @@
 <?php
-// Ensure session is started (safe to call even if already started)
+// Ensure session is started
 if (session_status() === PHP_SESSION_NONE) session_start();
-// Guard: only customers can access customer pages
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
-    header("Location: index.php");
+
+$is_logged_in = isset($_SESSION['user_id']) && ($_SESSION['role'] === 'customer');
+$current_page = basename($_SERVER['PHP_SELF']);
+
+// Pages that REQUIRE a logged-in customer session
+$protected_pages = ['my_orders.php', 'my_profile.php'];
+if (in_array($current_page, $protected_pages) && !$is_logged_in) {
+    header("Location: admin_login.php?info=" . urlencode("Please login to access this page."));
     exit();
 }
-// Count cart items for badge
+
+// Cart item count: DB cart for logged-in, session for guests
 $cart_count = 0;
-if (isset($conn)) {
-    $uid = $_SESSION['user_id'];
-    $cc = $conn->query("SELECT SUM(quantity) as total FROM cart WHERE user_id = $uid");
+if ($is_logged_in && isset($conn)) {
+    $uid = (int)$_SESSION['user_id'];
+    $cc  = $conn->query("SELECT SUM(quantity) as total FROM cart WHERE user_id = $uid");
     if ($cc) $cart_count = (int)($cc->fetch_assoc()['total'] ?? 0);
+} elseif (!empty($_SESSION['guest_cart'])) {
+    $cart_count = array_sum($_SESSION['guest_cart']);
 }
-$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,11 +53,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </button>
         <div class="collapse navbar-collapse" id="customerNav">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+
+                <!-- Shop — always visible -->
                 <li class="nav-item">
                     <a class="nav-link <?php echo $current_page=='shop.php' ? 'active fw-semibold' : ''; ?>" href="shop.php">
                         <i class="fas fa-store me-1"></i>Shop
                     </a>
                 </li>
+
+                <?php if ($is_logged_in): ?>
+                <!-- Logged-in customer: Orders & Profile -->
                 <li class="nav-item">
                     <a class="nav-link <?php echo $current_page=='my_orders.php' ? 'active fw-semibold' : ''; ?>" href="my_orders.php">
                         <i class="fas fa-box-open me-1"></i>My Orders
@@ -61,6 +73,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="fas fa-user me-1"></i>Profile
                     </a>
                 </li>
+                <?php endif; ?>
+
+                <!-- Cart — always visible -->
                 <li class="nav-item">
                     <a class="nav-link position-relative <?php echo $current_page=='cart.php' ? 'active fw-semibold' : ''; ?>" href="cart.php">
                         <i class="fas fa-shopping-cart me-1"></i>Cart
@@ -71,11 +86,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <?php endif; ?>
                     </a>
                 </li>
+
+                <!-- Auth action -->
                 <li class="nav-item ms-lg-2">
-                    <a class="btn btn-outline-light btn-sm" href="logout.php">
-                        <i class="fas fa-sign-out-alt me-1"></i>Logout
-                    </a>
+                    <?php if ($is_logged_in): ?>
+                        <a class="btn btn-outline-light btn-sm" href="logout.php">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    <?php else: ?>
+                        <a class="btn btn-warning btn-sm fw-semibold" href="admin_login.php">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    <?php endif; ?>
                 </li>
+
             </ul>
         </div>
     </div>

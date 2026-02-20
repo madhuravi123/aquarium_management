@@ -6,7 +6,8 @@
       "Bash(\"/c/Users/Local user/AppData/Local/Programs/Python/Python311/python\":*)",
       "Bash(echo:*)",
       "Bash(\"C:/xampp/xampp_stop.exe\")",
-      "Bash(\"C:/xampp/xampp_start.exe\")"
+      "Bash(\"C:/xampp/xampp_start.exe\")",
+      "Read(//c/xampp/htdocs/aquarium_management/**)"
     ]
   }
 }

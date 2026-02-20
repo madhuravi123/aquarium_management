@@ -83,29 +83,29 @@ function seed_dummy_data($conn) {
     // =====================================================================
     // 5. CUSTOMERS (22 Tamil Nadu customers)
     // =====================================================================
-    $conn->query("INSERT INTO customers (name, phone, email, address) VALUES
-        ('Arjun Kumar',         '9841100001', 'arjun.kumar@gmail.com',       '12 Gandhi Road, Cuddalore – 607001'),
-        ('Karthik Rajan',       '9841100002', 'karthik.rajan@gmail.com',     '34 Raja Street, Chidambaram – 608001'),
-        ('Priya Sundaram',      '9841100003', 'priya.sundaram@gmail.com',    '56 Pondy Road, Pondicherry – 605001'),
-        ('Harish Babu',         '9841100004', 'harish.babu@gmail.com',       '78 Bus Stand Road, Villupuram – 605601'),
-        ('Nivetha Krishnan',    '9841100005', 'nivetha.k@gmail.com',         '90 Anna Nagar, Chennai – 600040'),
-        ('Saravanan Murugan',   '9841100006', 'saravanan.m@gmail.com',       '23 Neyveli Township, Neyveli – 607801'),
-        ('Meena Rajesh',        '9841100007', 'meena.rajesh@gmail.com',      '45 Sivaji Nagar, Cuddalore – 607001'),
-        ('Vignesh Anand',       '9841100008', 'vignesh.anand@gmail.com',     '67 Natarajan Street, Chidambaram – 608001'),
-        ('Lakshmi Devi',        '9841100009', 'lakshmi.devi@gmail.com',      '89 Marine Street, Pondicherry – 605002'),
-        ('Rajkumar Selvaraj',   '9841100010', 'rajkumar.s@gmail.com',        '10 Cuddalore Port Road, Cuddalore – 607003'),
-        ('Divya Mohan',         '9841100011', 'divya.mohan@gmail.com',       '22 T Nagar, Chennai – 600017'),
-        ('Senthil Kumar',       '9841100012', 'senthil.k@gmail.com',         '44 Market Road, Villupuram – 605602'),
-        ('Anitha Suresh',       '9841100013', 'anitha.suresh@gmail.com',     '66 Block 5, Neyveli – 607803'),
-        ('Balamurugan Ravi',    '9841100014', 'balamurugan.r@gmail.com',     '88 Nethaji Street, Cuddalore – 607001'),
-        ('Kavitha Chandran',    '9841100015', 'kavitha.c@gmail.com',         '11 East Car Street, Chidambaram – 608001'),
-        ('Murugesan Pillai',    '9841100016', 'murugesan.p@gmail.com',       '33 White Town, Pondicherry – 605001'),
-        ('Sangeetha Natarajan', '9841100017', 'sangeetha.n@gmail.com',       '55 GEB Colony, Villupuram – 605602'),
-        ('Dhanushkodi Raj',     '9841100018', 'dhanushkodi.r@gmail.com',     '77 Velachery Road, Chennai – 600042'),
-        ('Pavithra Shankar',    '9841100019', 'pavithra.s@gmail.com',        '99 Indra Nagar, Cuddalore – 607002'),
-        ('Gopalan Subramanian', '9841100020', 'gopalan.s@gmail.com',         '14 School Road, Neyveli – 607801'),
-        ('Ramya Venkatesh',     '9841100021', 'ramya.v@gmail.com',           '28 Natarajan Colony, Chidambaram – 608002'),
-        ('Suresh Pandian',      '9841100022', 'suresh.pandian@gmail.com',    'MG Road, Pondicherry – 605001')
+    $conn->query("INSERT INTO customers (name, phone, email, address, city, pincode) VALUES
+        ('Arjun Kumar',         '9841100001', 'arjun.kumar@gmail.com',       '12 Gandhi Road',           'Cuddalore',   '607001'),
+        ('Karthik Rajan',       '9841100002', 'karthik.rajan@gmail.com',     '34 Raja Street',           'Chidambaram', '608001'),
+        ('Priya Sundaram',      '9841100003', 'priya.sundaram@gmail.com',    '56 Pondy Road',            'Pondicherry',  '605001'),
+        ('Harish Babu',         '9841100004', 'harish.babu@gmail.com',       '78 Bus Stand Road',        'Villupuram',  '605601'),
+        ('Nivetha Krishnan',    '9841100005', 'nivetha.k@gmail.com',         '90 Anna Nagar',            'Chennai',     '600040'),
+        ('Saravanan Murugan',   '9841100006', 'saravanan.m@gmail.com',       '23 Neyveli Township',      'Neyveli',     '607801'),
+        ('Meena Rajesh',        '9841100007', 'meena.rajesh@gmail.com',      '45 Sivaji Nagar',          'Cuddalore',   '607001'),
+        ('Vignesh Anand',       '9841100008', 'vignesh.anand@gmail.com',     '67 Natarajan Street',      'Chidambaram', '608001'),
+        ('Lakshmi Devi',        '9841100009', 'lakshmi.devi@gmail.com',      '89 Marine Street',         'Pondicherry',  '605002'),
+        ('Rajkumar Selvaraj',   '9841100010', 'rajkumar.s@gmail.com',        '10 Cuddalore Port Road',   'Cuddalore',   '607003'),
+        ('Divya Mohan',         '9841100011', 'divya.mohan@gmail.com',       '22 T Nagar',               'Chennai',     '600017'),
+        ('Senthil Kumar',       '9841100012', 'senthil.k@gmail.com',         '44 Market Road',           'Villupuram',  '605602'),
+        ('Anitha Suresh',       '9841100013', 'anitha.suresh@gmail.com',     '66 Block 5',               'Neyveli',     '607803'),
+        ('Balamurugan Ravi',    '9841100014', 'balamurugan.r@gmail.com',     '88 Nethaji Street',        'Cuddalore',   '607001'),
+        ('Kavitha Chandran',    '9841100015', 'kavitha.c@gmail.com',         '11 East Car Street',       'Chidambaram', '608001'),
+        ('Murugesan Pillai',    '9841100016', 'murugesan.p@gmail.com',       '33 White Town',            'Pondicherry',  '605001'),
+        ('Sangeetha Natarajan', '9841100017', 'sangeetha.n@gmail.com',       '55 GEB Colony',            'Villupuram',  '605602'),
+        ('Dhanushkodi Raj',     '9841100018', 'dhanushkodi.r@gmail.com',     '77 Velachery Road',        'Chennai',     '600042'),
+        ('Pavithra Shankar',    '9841100019', 'pavithra.s@gmail.com',        '99 Indra Nagar',           'Cuddalore',   '607002'),
+        ('Gopalan Subramanian', '9841100020', 'gopalan.s@gmail.com',         '14 School Road',           'Neyveli',     '607801'),
+        ('Ramya Venkatesh',     '9841100021', 'ramya.v@gmail.com',           '28 Natarajan Colony',      'Chidambaram', '608002'),
+        ('Suresh Pandian',      '9841100022', 'suresh.pandian@gmail.com',    'MG Road',                  'Pondicherry',  '605001')
     ");
 
     // =====================================================================
@@ -174,6 +174,8 @@ function seed_dummy_data($conn) {
     $three_days = date('Y-m-d', strtotime('-3 days'));
     $four_days  = date('Y-m-d', strtotime('-4 days'));
     $five_days  = date('Y-m-d', strtotime('-5 days'));
+    $six_days   = date('Y-m-d', strtotime('-6 days'));
+    $eight_days = date('Y-m-d', strtotime('-8 days'));
     $week_ago   = date('Y-m-d', strtotime('-7 days'));
     $ten_days   = date('Y-m-d', strtotime('-10 days'));
     $two_weeks  = date('Y-m-d', strtotime('-14 days'));
@@ -202,7 +204,9 @@ function seed_dummy_data($conn) {
         (19,  1600.00, 0.00,  1600.00, 'upi',    '$three_wk 11:30:00'),
         (20,  5400.00, 0.00,  5400.00, 'cash',   '$three_wk 16:00:00'),
         (21, 12000.00, 0.00, 12000.00, 'card',   '$month_ago 10:00:00'),
-        (22,  2200.00, 0.00,  2200.00, 'cash',   '$month_ago 14:30:00')
+        (22,  2200.00, 0.00,  2200.00, 'cash',   '$month_ago 14:30:00'),
+        (7,  20000.00, 0.00, 20000.00, 'upi',    '$six_days 10:00:00'),
+        (12, 15000.00, 0.00, 15000.00, 'cash',   '$eight_days 11:30:00')
     ");
 
     // =====================================================================
@@ -273,7 +277,14 @@ function seed_dummy_data($conn) {
         (21, 25,  1,  400.00,   400.00),
         (22, 13,  5,  200.00,  1000.00),
         (22, 14,  2,  400.00,   800.00),
-        (22, 26,  2,  180.00,   360.00)
+        (22, 26,  2,  180.00,   360.00),
+        (23,  2,  1,15000.00, 15000.00),
+        (23, 24,  2,  1200.00,  2400.00),
+        (23, 25,  5,   400.00,  2000.00),
+        (23, 17, 12,    50.00,   600.00),
+        (24,  4,  2,  4000.00,  8000.00),
+        (24,  5,  7,   500.00,  3500.00),
+        (24, 16, 14,   250.00,  3500.00)
     ");
 
     // =====================================================================

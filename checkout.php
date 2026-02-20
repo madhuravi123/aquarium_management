@@ -1,26 +1,54 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
-    header("Location: index.php");
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// Admins/staff don't checkout via the customer panel
+if (isset($_SESSION['user_id']) && in_array($_SESSION['role'], ['admin', 'staff'])) {
+    header("Location: dashboard.php");
     exit();
 }
+
 require_once 'config/db_connect.php';
+require_once 'includes/error_logger.php';
 $page_title = 'Checkout';
 
-$user_id = (int)$_SESSION['user_id'];
+$is_logged_in = isset($_SESSION['user_id']) && ($_SESSION['role'] === 'customer');
+$user_id      = $is_logged_in ? (int)$_SESSION['user_id'] : null;
 
-// Fetch cart
-$cart_res = $conn->query("
-    SELECT c.fish_id, c.quantity, f.name, f.selling_price, f.stock_quantity
-    FROM cart c JOIN fish f ON c.fish_id = f.id
-    WHERE c.user_id = $user_id
-");
+// ── BUILD CART ITEMS ──────────────────────────────────────────────────────────
 $cart_items = [];
-$total = 0.0;
-while ($row = $cart_res->fetch_assoc()) {
-    $row['subtotal'] = $row['quantity'] * $row['selling_price'];
-    $total += $row['subtotal'];
-    $cart_items[] = $row;
+$total      = 0.0;
+
+if ($is_logged_in) {
+    // DB cart for logged-in customers
+    $cart_res = $conn->query("
+        SELECT c.fish_id, c.quantity, f.name, f.selling_price, f.stock_quantity
+        FROM cart c JOIN fish f ON c.fish_id = f.id
+        WHERE c.user_id = $user_id
+    ");
+    while ($row = $cart_res->fetch_assoc()) {
+        $row['subtotal'] = $row['quantity'] * $row['selling_price'];
+        $total += $row['subtotal'];
+        $cart_items[] = $row;
+    }
+} else {
+    // Session cart for guests
+    if (!empty($_SESSION['guest_cart'])) {
+        foreach ($_SESSION['guest_cart'] as $fish_id => $quantity) {
+            $fish_id  = (int)$fish_id;
+            $quantity = max(1, (int)$quantity);
+            $f = $conn->query(
+                "SELECT id AS fish_id, name, selling_price, stock_quantity FROM fish WHERE id = $fish_id"
+            )->fetch_assoc();
+            if ($f) {
+                $quantity      = min($quantity, (int)$f['stock_quantity']);
+                if ($quantity <= 0) continue;
+                $f['quantity'] = $quantity;
+                $f['subtotal'] = $quantity * $f['selling_price'];
+                $total += $f['subtotal'];
+                $cart_items[] = $f;
+            }
+        }
+    }
 }
 
 if (empty($cart_items)) {
@@ -28,60 +56,76 @@ if (empty($cart_items)) {
     exit();
 }
 
-// Fetch user profile for pre-fill
-$user_res = $conn->query("SELECT full_name, phone, address FROM users WHERE id = $user_id");
-$user_profile = $user_res->fetch_assoc();
+// Pre-fill delivery fields for logged-in customers
+$prefill = ['name' => '', 'phone' => '', 'address' => ''];
+if ($is_logged_in) {
+    $u = $conn->query("SELECT full_name, phone, address FROM users WHERE id = $user_id")->fetch_assoc();
+    $prefill['name']    = $u['full_name'] ?? $_SESSION['full_name'] ?? '';
+    $prefill['phone']   = $u['phone']     ?? '';
+    $prefill['address'] = $u['address']   ?? '';
+}
 
-// Handle order placement
+// ── HANDLE ORDER PLACEMENT ────────────────────────────────────────────────────
 $error = '';
-$success = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $delivery_name    = trim($_POST['delivery_name'] ?? '');
-    $delivery_phone   = trim($_POST['delivery_phone'] ?? '');
+    csrf_check();
+    $delivery_name    = trim($_POST['delivery_name']    ?? '');
+    $delivery_phone   = trim($_POST['delivery_phone']   ?? '');
     $delivery_address = trim($_POST['delivery_address'] ?? '');
-    $payment_method   = $_POST['payment_method'] ?? 'cash';
-    $notes            = trim($_POST['notes'] ?? '');
+    $delivery_city    = trim($_POST['delivery_city']    ?? '');
+    $delivery_pincode = trim($_POST['delivery_pincode'] ?? '');
+    $payment_method   = $_POST['payment_method']        ?? 'cash';
+    $notes            = trim($_POST['notes']            ?? '');
 
     if (!$delivery_name || !$delivery_phone || !$delivery_address) {
-        $error = 'Please fill in all delivery details.';
+        $error = 'Please fill in your name, phone number and address.';
     } elseif (!in_array($payment_method, ['cash', 'card', 'online', 'upi'])) {
         $error = 'Invalid payment method selected.';
     } else {
         $conn->begin_transaction();
         try {
-            // Find or create customer record
+            // Find or create customer record by phone
             $stmt = $conn->prepare("SELECT id FROM customers WHERE phone = ?");
             $stmt->bind_param("s", $delivery_phone);
             $stmt->execute();
             $cust = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
 
             if ($cust) {
-                $customer_id = $cust['id'];
-                // Update customer name/address if changed
-                $upd = $conn->prepare("UPDATE customers SET name = ?, address = ? WHERE id = ?");
-                $upd->bind_param("ssi", $delivery_name, $delivery_address, $customer_id);
+                $customer_id = (int)$cust['id'];
+                $upd = $conn->prepare(
+                    "UPDATE customers SET name = ?, address = ?, city = ?, pincode = ? WHERE id = ?"
+                );
+                $upd->bind_param("ssssi", $delivery_name, $delivery_address, $delivery_city, $delivery_pincode, $customer_id);
                 $upd->execute();
+                $upd->close();
             } else {
-                $ins = $conn->prepare("INSERT INTO customers (name, phone, address) VALUES (?, ?, ?)");
-                $ins->bind_param("sss", $delivery_name, $delivery_phone, $delivery_address);
+                $ins = $conn->prepare(
+                    "INSERT INTO customers (name, phone, address, city, pincode) VALUES (?, ?, ?, ?, ?)"
+                );
+                $ins->bind_param("sssss", $delivery_name, $delivery_phone, $delivery_address, $delivery_city, $delivery_pincode);
                 $ins->execute();
-                $customer_id = $conn->insert_id;
+                $customer_id = (int)$conn->insert_id;
+                $ins->close();
             }
 
-            // Insert sale
+            // Insert sale record (user_id is NULL for guests)
             $sale_stmt = $conn->prepare(
                 "INSERT INTO sales (customer_id, user_id, total_amount, tax_amount, final_amount, payment_method, notes)
                  VALUES (?, ?, ?, 0.00, ?, ?, ?)"
             );
             $sale_stmt->bind_param("iiddss", $customer_id, $user_id, $total, $total, $payment_method, $notes);
             $sale_stmt->execute();
-            $sale_id = $conn->insert_id;
+            $sale_id = (int)$conn->insert_id;
+            $sale_stmt->close();
 
             // Insert sale items and decrement stock
             foreach ($cart_items as $item) {
-                // Re-check stock
-                $stk = $conn->query("SELECT stock_quantity FROM fish WHERE id = {$item['fish_id']}")->fetch_assoc();
-                if (!$stk || $stk['stock_quantity'] < $item['quantity']) {
+                $stk = $conn->query(
+                    "SELECT stock_quantity FROM fish WHERE id = {$item['fish_id']}"
+                )->fetch_assoc();
+                if (!$stk || (int)$stk['stock_quantity'] < $item['quantity']) {
                     throw new Exception("Insufficient stock for: " . $item['name']);
                 }
 
@@ -90,28 +134,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 $si->bind_param("iiidd", $sale_id, $item['fish_id'], $item['quantity'], $item['selling_price'], $item['subtotal']);
                 $si->execute();
+                $si->close();
 
-                // Decrement stock
-                $conn->query("UPDATE fish SET stock_quantity = stock_quantity - {$item['quantity']} WHERE id = {$item['fish_id']}");
+                $conn->query(
+                    "UPDATE fish SET stock_quantity = stock_quantity - {$item['quantity']} WHERE id = {$item['fish_id']}"
+                );
 
                 // Low-stock notification
-                $new_stock = $stk['stock_quantity'] - $item['quantity'];
+                $new_stock = (int)$stk['stock_quantity'] - $item['quantity'];
                 if ($new_stock <= 5) {
                     $msg = "Low stock alert: {$item['name']} – only $new_stock remaining";
-                    $conn->query("INSERT INTO notifications (type, message) VALUES ('low_stock', '" . $conn->real_escape_string($msg) . "')");
+                    $conn->query(
+                        "INSERT INTO notifications (type, message) VALUES ('low_stock', '" . $conn->real_escape_string($msg) . "')"
+                    );
                 }
             }
 
             // Clear cart
-            $conn->query("DELETE FROM cart WHERE user_id = $user_id");
+            if ($is_logged_in) {
+                $conn->query("DELETE FROM cart WHERE user_id = $user_id");
+            } else {
+                $_SESSION['guest_cart'] = [];
+            }
 
             $conn->commit();
-            header("Location: my_orders.php?success=Order+placed+successfully!+Your+order+ID+is+%23$sale_id");
+
+            // Redirect with success
+            if ($is_logged_in) {
+                header("Location: my_orders.php?success=" . urlencode("Order placed! Your order ID is #$sale_id"));
+            } else {
+                header("Location: shop.php?msg=" . urlencode("Order placed! ID #$sale_id. Thank you, $delivery_name!"));
+            }
             exit();
 
         } catch (Exception $e) {
             $conn->rollback();
-            $error = 'Order failed: ' . $e->getMessage();
+            log_error("Checkout failed: " . $e->getMessage(), __FILE__, __LINE__);
+            $error = 'Order could not be placed: ' . htmlspecialchars($e->getMessage()) . '. Please try again.';
         }
     }
 }
@@ -121,13 +180,21 @@ include 'includes/customer_header.php';
 
 <div class="container py-4">
     <h4 class="fw-bold mb-1"><i class="fas fa-credit-card me-2 text-primary"></i>Checkout</h4>
-    <p class="text-muted mb-4">Complete your delivery details and confirm order.</p>
+    <p class="text-muted mb-4">
+        Complete your delivery details and confirm your order.
+        <?php if (!$is_logged_in): ?>
+            <span class="badge bg-info text-dark ms-1">
+                <i class="fas fa-user-check me-1"></i>Guest Checkout — No account required
+            </span>
+        <?php endif; ?>
+    </p>
 
     <?php if ($error): ?>
-        <div class="alert alert-danger"><i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($error); ?></div>
+        <div class="alert alert-danger"><i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?></div>
     <?php endif; ?>
 
     <form method="POST">
+    <?php echo csrf_field(); ?>
     <div class="row g-4">
         <!-- Delivery Details -->
         <div class="col-lg-7">
@@ -136,52 +203,68 @@ include 'includes/customer_header.php';
                     <i class="fas fa-map-marker-alt me-2"></i>Delivery Details
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" name="delivery_name" class="form-control" required
-                               value="<?php echo htmlspecialchars($user_profile['full_name'] ?? $_SESSION['full_name'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
-                        <input type="tel" name="delivery_phone" class="form-control" required
-                               value="<?php echo htmlspecialchars($user_profile['phone'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Delivery Address <span class="text-danger">*</span></label>
-                        <textarea name="delivery_address" class="form-control" rows="3" required><?php echo htmlspecialchars($user_profile['address'] ?? ''); ?></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold"><i class="fas fa-money-bill-wave me-1"></i>Payment Method <span class="text-danger">*</span></label>
-                        <div class="row g-2 mt-1">
-                            <div class="col-6 col-md-3">
-                                <input type="radio" class="btn-check" name="payment_method" id="pm_cash" value="cash" checked>
-                                <label class="btn btn-outline-secondary w-100" for="pm_cash">
-                                    <i class="fas fa-money-bill-wave d-block mb-1"></i>Cash
-                                </label>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <input type="radio" class="btn-check" name="payment_method" id="pm_upi" value="upi">
-                                <label class="btn btn-outline-secondary w-100" for="pm_upi">
-                                    <i class="fas fa-qrcode d-block mb-1"></i>UPI
-                                </label>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <input type="radio" class="btn-check" name="payment_method" id="pm_card" value="card">
-                                <label class="btn btn-outline-secondary w-100" for="pm_card">
-                                    <i class="fas fa-credit-card d-block mb-1"></i>Card
-                                </label>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <input type="radio" class="btn-check" name="payment_method" id="pm_online" value="online">
-                                <label class="btn btn-outline-secondary w-100" for="pm_online">
-                                    <i class="fas fa-globe d-block mb-1"></i>Online
-                                </label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" name="delivery_name" class="form-control" required
+                                   value="<?php echo htmlspecialchars($_POST['delivery_name'] ?? $prefill['name']); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
+                            <input type="tel" name="delivery_phone" class="form-control" required
+                                   placeholder="10-digit mobile number"
+                                   value="<?php echo htmlspecialchars($_POST['delivery_phone'] ?? $prefill['phone']); ?>">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Street / Area <span class="text-danger">*</span></label>
+                            <input type="text" name="delivery_address" class="form-control" required
+                                   placeholder="Door no., Street, Area"
+                                   value="<?php echo htmlspecialchars($_POST['delivery_address'] ?? $prefill['address']); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">City</label>
+                            <input type="text" name="delivery_city" class="form-control"
+                                   placeholder="e.g. Cuddalore"
+                                   value="<?php echo htmlspecialchars($_POST['delivery_city'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Pincode</label>
+                            <input type="text" name="delivery_pincode" class="form-control"
+                                   placeholder="e.g. 607001" pattern="[0-9]{6}" title="6-digit pincode"
+                                   value="<?php echo htmlspecialchars($_POST['delivery_pincode'] ?? ''); ?>">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-money-bill-wave me-1"></i>Payment Method <span class="text-danger">*</span>
+                            </label>
+                            <div class="row g-2 mt-1">
+                                <?php
+                                $pm_sel  = $_POST['payment_method'] ?? 'cash';
+                                $methods = [
+                                    'cash'   => ['icon' => 'money-bill-wave', 'label' => 'Cash'],
+                                    'upi'    => ['icon' => 'qrcode',          'label' => 'UPI'],
+                                    'card'   => ['icon' => 'credit-card',     'label' => 'Card'],
+                                    'online' => ['icon' => 'globe',           'label' => 'Online'],
+                                ];
+                                foreach ($methods as $val => $m):
+                                ?>
+                                <div class="col-6 col-md-3">
+                                    <input type="radio" class="btn-check" name="payment_method"
+                                           id="pm_<?php echo $val; ?>" value="<?php echo $val; ?>"
+                                           <?php echo $pm_sel === $val ? 'checked' : ''; ?>>
+                                    <label class="btn btn-outline-secondary w-100" for="pm_<?php echo $val; ?>">
+                                        <i class="fas fa-<?php echo $m['icon']; ?> d-block mb-1"></i>
+                                        <?php echo $m['label']; ?>
+                                    </label>
+                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-0">
-                        <label class="form-label fw-semibold">Special Notes (Optional)</label>
-                        <textarea name="notes" class="form-control" rows="2" placeholder="Any special instructions for your order..."></textarea>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Special Notes (Optional)</label>
+                            <textarea name="notes" class="form-control" rows="2"
+                                      placeholder="Any special instructions for your order..."><?php echo htmlspecialchars($_POST['notes'] ?? ''); ?></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,7 +281,10 @@ include 'includes/customer_header.php';
                         <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
                             <div>
                                 <div class="fw-semibold"><?php echo htmlspecialchars($item['name']); ?></div>
-                                <small class="text-muted">&#8377;<?php echo number_format($item['selling_price'], 2); ?> × <?php echo $item['quantity']; ?></small>
+                                <small class="text-muted">
+                                    &#8377;<?php echo number_format($item['selling_price'], 2); ?>
+                                    &times; <?php echo $item['quantity']; ?>
+                                </small>
                             </div>
                             <span class="fw-semibold">&#8377;<?php echo number_format($item['subtotal'], 2); ?></span>
                         </div>
@@ -233,8 +319,8 @@ include 'includes/customer_header.php';
                 <div class="card-body py-2 px-3">
                     <small class="text-muted">
                         <i class="fas fa-shield-alt me-1 text-success"></i>
-                        <strong>Safe &amp; Secure</strong> – Your order is handled with care by our team.
-                        Live fish are packed with oxygen and delivered same-day within Cuddalore.
+                        <strong>Safe &amp; Secure</strong> — Live fish packed with oxygen,
+                        delivered same-day within Cuddalore.
                     </small>
                 </div>
             </div>

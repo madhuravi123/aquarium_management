@@ -1,25 +1,32 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
-    header("Location: index.php");
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// Admins/staff who land here get sent to their dashboard
+if (isset($_SESSION['user_id']) && in_array($_SESSION['role'], ['admin', 'staff'])) {
+    header("Location: dashboard.php");
     exit();
 }
+
 require_once 'config/db_connect.php';
+require_once 'includes/error_logger.php';
 $page_title = 'Browse Fish';
 
+$is_logged_in  = isset($_SESSION['user_id']) && $_SESSION['role'] === 'customer';
+$display_name  = $is_logged_in ? ($_SESSION['full_name'] ?? $_SESSION['username']) : '';
+
 // Filters
-$search    = isset($_GET['search']) ? trim($_GET['search']) : '';
-$water_type= isset($_GET['water_type']) ? $_GET['water_type'] : '';
-$sort      = isset($_GET['sort']) ? $_GET['sort'] : 'name';
+$search    = isset($_GET['search'])     ? trim($_GET['search'])    : '';
+$water_type= isset($_GET['water_type']) ? $_GET['water_type']      : '';
+$sort      = isset($_GET['sort'])       ? $_GET['sort']            : 'name';
 
 // Build query
-$where = "WHERE stock_quantity > 0";
+$where  = "WHERE stock_quantity > 0";
 $params = [];
 $types  = '';
 
 if ($search !== '') {
     $where .= " AND (name LIKE ? OR species LIKE ? OR color LIKE ?)";
-    $like = "%$search%";
+    $like   = "%$search%";
     $params = [$like, $like, $like];
     $types  = 'sss';
 }
@@ -54,11 +61,24 @@ include 'includes/customer_header.php';
     <div class="bg-primary bg-gradient text-white rounded-3 p-4 mb-4 shadow-sm">
         <div class="row align-items-center">
             <div class="col">
-                <h4 class="mb-1">
-                    <i class="fas fa-hand-wave me-2"></i>
-                    Welcome, <?php echo htmlspecialchars($_SESSION['full_name'] ?? $_SESSION['username']); ?>!
-                </h4>
-                <p class="mb-0 opacity-75">Explore our fresh fish collection – direct from local farms.</p>
+                <?php if ($is_logged_in): ?>
+                    <h4 class="mb-1">
+                        <i class="fas fa-hand-wave me-2"></i>
+                        Welcome back, <?php echo htmlspecialchars($display_name); ?>!
+                    </h4>
+                    <p class="mb-0 opacity-75">Explore our fresh fish collection – direct from local farms.</p>
+                <?php else: ?>
+                    <h4 class="mb-1">
+                        <i class="fas fa-fish me-2"></i>
+                        Welcome to Harini Aquarium Shop!
+                    </h4>
+                    <p class="mb-0 opacity-75">
+                        Browse freely — no login required.
+                        <a href="admin_login.php" class="text-warning fw-semibold ms-2">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login for order history &amp; saved profile
+                        </a>
+                    </p>
+                <?php endif; ?>
             </div>
             <div class="col-auto">
                 <i class="fas fa-fish" style="font-size:3rem;opacity:0.3;"></i>
@@ -98,9 +118,9 @@ include 'includes/customer_header.php';
                     </label>
                     <select name="water_type" class="form-select">
                         <option value="">All Types</option>
-                        <option value="freshwater"  <?php echo $water_type=='freshwater'  ? 'selected':''; ?>>Freshwater</option>
-                        <option value="saltwater"   <?php echo $water_type=='saltwater'   ? 'selected':''; ?>>Saltwater</option>
-                        <option value="brackish"    <?php echo $water_type=='brackish'    ? 'selected':''; ?>>Brackish</option>
+                        <option value="freshwater" <?php echo $water_type=='freshwater' ? 'selected':''; ?>>Freshwater</option>
+                        <option value="saltwater"  <?php echo $water_type=='saltwater'  ? 'selected':''; ?>>Saltwater</option>
+                        <option value="brackish"   <?php echo $water_type=='brackish'   ? 'selected':''; ?>>Brackish</option>
                     </select>
                 </div>
                 <div class="col-md-2">
@@ -144,7 +164,6 @@ include 'includes/customer_header.php';
                     </div>
 
                     <div class="card-body d-flex flex-column p-3">
-                        <!-- Water type badge -->
                         <div class="mb-1">
                             <?php
                             $badge_class = match($fish['water_type']) {
@@ -181,6 +200,7 @@ include 'includes/customer_header.php';
 
                             <!-- Add to Cart Form -->
                             <form action="cart_action.php" method="POST" class="d-flex gap-2">
+                                <?php echo csrf_field(); ?>
                                 <input type="hidden" name="action" value="add">
                                 <input type="hidden" name="fish_id" value="<?php echo $fish['id']; ?>">
                                 <input type="number" name="quantity" value="1" min="1"

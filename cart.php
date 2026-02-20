@@ -1,34 +1,78 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
-    header("Location: index.php");
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// Admins/staff don't have a cart
+if (isset($_SESSION['user_id']) && in_array($_SESSION['role'], ['admin', 'staff'])) {
+    header("Location: dashboard.php");
     exit();
 }
+
 require_once 'config/db_connect.php';
-$page_title = 'My Cart';
-
-$user_id = (int)$_SESSION['user_id'];
-
-// Fetch cart items with fish details
-$cart_res = $conn->query("
-    SELECT c.fish_id, c.quantity, f.name, f.species, f.selling_price, f.stock_quantity, f.image
-    FROM cart c
-    JOIN fish f ON c.fish_id = f.id
-    WHERE c.user_id = $user_id
-    ORDER BY c.added_at ASC
-");
+require_once 'includes/error_logger.php';
+$page_title   = 'My Cart';
+$is_logged_in = isset($_SESSION['user_id']) && ($_SESSION['role'] === 'customer');
+$user_id      = $is_logged_in ? (int)$_SESSION['user_id'] : 0;
 
 $cart_items = [];
-$total = 0.0;
-while ($row = $cart_res->fetch_assoc()) {
-    // Clamp quantity to available stock
-    if ($row['quantity'] > $row['stock_quantity']) {
-        $row['quantity'] = $row['stock_quantity'];
-        $conn->query("UPDATE cart SET quantity = {$row['stock_quantity']} WHERE user_id = $user_id AND fish_id = {$row['fish_id']}");
+$total      = 0.0;
+
+if ($is_logged_in) {
+    // ── DB cart for logged-in customers ─────────────────────────────────────
+    $cart_res = $conn->query("
+        SELECT c.fish_id, c.quantity, f.name, f.species, f.selling_price, f.stock_quantity, f.image
+        FROM cart c
+        JOIN fish f ON c.fish_id = f.id
+        WHERE c.user_id = $user_id
+        ORDER BY c.added_at ASC
+    ");
+    while ($row = $cart_res->fetch_assoc()) {
+        // Clamp quantity to available stock
+        if ($row['quantity'] > $row['stock_quantity']) {
+            $row['quantity'] = $row['stock_quantity'];
+            $conn->query("UPDATE cart SET quantity = {$row['stock_quantity']} WHERE user_id = $user_id AND fish_id = {$row['fish_id']}");
+        }
+        $row['subtotal'] = $row['quantity'] * $row['selling_price'];
+        $total += $row['subtotal'];
+        $cart_items[] = $row;
     }
-    $row['subtotal'] = $row['quantity'] * $row['selling_price'];
-    $total += $row['subtotal'];
-    $cart_items[] = $row;
+} else {
+    // ── Session cart for guests ──────────────────────────────────────────────
+    if (!empty($_SESSION['guest_cart'])) {
+        foreach ($_SESSION['guest_cart'] as $fish_id => $quantity) {
+            $fish_id  = (int)$fish_id;
+            $quantity = max(1, (int)$quantity);
+
+            $fish_res = $conn->query("SELECT id, name, species, selling_price, stock_quantity, image FROM fish WHERE id = $fish_id");
+            if (!$fish_res || $fish_res->num_rows === 0) {
+                unset($_SESSION['guest_cart'][$fish_id]); // remove orphan
+                continue;
+            }
+            $f = $fish_res->fetch_assoc();
+
+            // Clamp quantity
+            if ($quantity > $f['stock_quantity']) {
+                $quantity = $f['stock_quantity'];
+                $_SESSION['guest_cart'][$fish_id] = $quantity;
+            }
+            if ($quantity <= 0) {
+                unset($_SESSION['guest_cart'][$fish_id]);
+                continue;
+            }
+
+            $row = [
+                'fish_id'        => $fish_id,
+                'quantity'       => $quantity,
+                'name'           => $f['name'],
+                'species'        => $f['species'],
+                'selling_price'  => $f['selling_price'],
+                'stock_quantity' => $f['stock_quantity'],
+                'image'          => $f['image'] ?? '',
+                'subtotal'       => $quantity * $f['selling_price'],
+            ];
+            $total += $row['subtotal'];
+            $cart_items[] = $row;
+        }
+    }
 }
 
 include 'includes/customer_header.php';
@@ -92,6 +136,7 @@ include 'includes/customer_header.php';
                                     <td>&#8377;<?php echo number_format($item['selling_price'], 2); ?></td>
                                     <td style="width:130px;">
                                         <form action="cart_action.php" method="POST" class="d-flex gap-1">
+                                            <?php echo csrf_field(); ?>
                                             <input type="hidden" name="action" value="update">
                                             <input type="hidden" name="fish_id" value="<?php echo $item['fish_id']; ?>">
                                             <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>"
@@ -105,6 +150,7 @@ include 'includes/customer_header.php';
                                     <td class="fw-semibold text-success">&#8377;<?php echo number_format($item['subtotal'], 2); ?></td>
                                     <td>
                                         <form action="cart_action.php" method="POST">
+                                            <?php echo csrf_field(); ?>
                                             <input type="hidden" name="action" value="remove">
                                             <input type="hidden" name="fish_id" value="<?php echo $item['fish_id']; ?>">
                                             <button type="submit" class="btn btn-outline-danger btn-sm"
@@ -125,6 +171,7 @@ include 'includes/customer_header.php';
                         <i class="fas fa-arrow-left me-1"></i>Continue Shopping
                     </a>
                     <form action="cart_action.php" method="POST">
+                        <?php echo csrf_field(); ?>
                         <input type="hidden" name="action" value="clear">
                         <button type="submit" class="btn btn-outline-danger"
                                 onclick="return confirm('Clear all items from cart?')">
@@ -157,6 +204,12 @@ include 'includes/customer_header.php';
                                 <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
                             </a>
                         </div>
+                        <?php if (!$is_logged_in): ?>
+                            <p class="text-muted small text-center mt-2 mb-0">
+                                <i class="fas fa-info-circle me-1"></i>
+                                No login required — just fill delivery details at checkout.
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

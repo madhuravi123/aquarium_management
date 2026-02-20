@@ -7,7 +7,13 @@ $dbname = 'aquarium_db';
 // Connect without database first to create it if needed
 $conn = new mysqli($host, $user, $pass);
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    error_log("[Aquarium] DB connection failed: " . $conn->connect_error);
+    http_response_code(503);
+    die('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Service Unavailable</title>
+<style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#0a3d62;color:#fff;}
+.box{text-align:center;padding:2rem;max-width:480px;}h2{color:#f39c12;margin-bottom:.5rem;}p{opacity:.8;line-height:1.6;}</style></head>
+<body><div class="box"><h2>&#128019; Database Unavailable</h2>
+<p>The database server is not responding.<br>Please ensure the <strong>XAMPP MySQL</strong> service is running, then refresh this page.</p></div></body></html>');
 }
 
 // Create database if not exists
@@ -70,6 +76,8 @@ if ($is_first_run) {
             phone VARCHAR(20),
             email VARCHAR(100),
             address TEXT,
+            city VARCHAR(100),
+            pincode VARCHAR(10),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS employees (
@@ -215,7 +223,13 @@ if ($is_first_run) {
 
     foreach ($statements as $sql) {
         if (!$conn->query($sql)) {
-            die("Table creation error: " . $conn->error . "<br>SQL: " . $sql);
+            error_log("[Aquarium] Table creation error: " . $conn->error);
+            http_response_code(500);
+            die('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Setup Error</title>
+<style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#0a3d62;color:#fff;}
+.box{text-align:center;padding:2rem;max-width:480px;}h2{color:#f39c12;margin-bottom:.5rem;}p{opacity:.8;line-height:1.6;}</style></head>
+<body><div class="box"><h2>&#9888; Setup Error</h2>
+<p>Database initialisation failed. Please check that MySQL is running and your user has CREATE privileges, then refresh.</p></div></body></html>');
         }
     }
 
@@ -232,6 +246,8 @@ if ($is_first_run) {
         "ALTER TABLE sales ADD COLUMN IF NOT EXISTS user_id INT AFTER customer_id",
         "ALTER TABLE sales ADD COLUMN IF NOT EXISTS notes TEXT AFTER payment_method",
         "ALTER TABLE sales MODIFY COLUMN payment_method ENUM('cash', 'card', 'online', 'upi') DEFAULT 'cash'",
+        "ALTER TABLE customers ADD COLUMN IF NOT EXISTS city VARCHAR(100) AFTER address",
+        "ALTER TABLE customers ADD COLUMN IF NOT EXISTS pincode VARCHAR(10) AFTER city",
         "CREATE TABLE IF NOT EXISTS cart (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,

@@ -3,11 +3,11 @@ session_start();
 require_once 'config/db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     if (empty($username) || empty($password)) {
-        header("Location: index.php?error=All fields are required");
+        header("Location: admin_login.php?error=" . urlencode("All fields are required."));
         exit();
     }
 
@@ -24,6 +24,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['full_name'] = $row['full_name'] ?? $row['username'];
             $_SESSION['role']      = $row['role'];
 
+            // If there is a guest cart, transfer it to DB cart on customer login
+            if ($row['role'] === 'customer' && !empty($_SESSION['guest_cart'])) {
+                foreach ($_SESSION['guest_cart'] as $fish_id => $qty) {
+                    $fish_id = (int)$fish_id;
+                    $qty     = max(1, (int)$qty);
+                    // Upsert into DB cart
+                    $upsert = $conn->prepare(
+                        "INSERT INTO cart (user_id, fish_id, quantity)
+                         VALUES (?, ?, ?)
+                         ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)"
+                    );
+                    $upsert->bind_param("iii", $row['id'], $fish_id, $qty);
+                    $upsert->execute();
+                    $upsert->close();
+                }
+                unset($_SESSION['guest_cart']); // clear guest cart after transfer
+            }
+
             // Role-based redirect
             if ($row['role'] === 'customer') {
                 header("Location: shop.php");
@@ -32,14 +50,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             exit();
         } else {
-            header("Location: index.php?error=Invalid password. Please try again.");
+            header("Location: admin_login.php?error=" . urlencode("Invalid password. Please try again."));
             exit();
         }
     } else {
-        header("Location: index.php?error=Username not found. Please check your credentials.");
+        header("Location: admin_login.php?error=" . urlencode("Username not found. Please check your credentials."));
         exit();
     }
-    $stmt->close();
 }
-$conn->close();
 ?>

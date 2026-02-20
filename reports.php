@@ -18,10 +18,11 @@ $sales_res = $conn->query($sales_sql);
 // Low Stock Report
 $low_stock = $conn->query("SELECT * FROM fish WHERE stock_quantity <= 5");
 
-// Expense vs Revenue (Simple monthly)
+// Expense vs Revenue (current month + year)
 $month = date('m');
-$revenue = $conn->query("SELECT SUM(final_amount) as total FROM sales WHERE MONTH(sale_date) = $month")->fetch_assoc()['total'] ?? 0;
-$expenses = $conn->query("SELECT SUM(amount) as total FROM expenses WHERE MONTH(expense_date) = $month")->fetch_assoc()['total'] ?? 0;
+$year  = date('Y');
+$revenue  = $conn->query("SELECT SUM(final_amount) as total FROM sales WHERE MONTH(sale_date) = $month AND YEAR(sale_date) = $year")->fetch_assoc()['total'] ?? 0;
+$expenses = $conn->query("SELECT SUM(amount) as total FROM expenses WHERE MONTH(expense_date) = $month AND YEAR(expense_date) = $year")->fetch_assoc()['total'] ?? 0;
 $profit = $revenue - $expenses;
 ?>
 
@@ -77,10 +78,10 @@ $profit = $revenue - $expenses;
                                         <?php while ($row = $low_stock->fetch_assoc()): ?>
                                             <tr class="table-danger">
                                                 <td>
-                                                    <?php echo $row['name']; ?>
+                                                    <?php echo htmlspecialchars($row['name']); ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $row['stock_quantity']; ?>
+                                                    <?php echo (int)$row['stock_quantity']; ?>
                                                 </td>
                                                 <td><a href="purchases_new.php"
                                                         class="btn btn-sm btn-outline-dark">Restock</a></td>
