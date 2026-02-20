@@ -13,15 +13,15 @@ require_once 'includes/error_logger.php';
 
 // ─── ADD CUSTOMER ─────────────────────────────────────────────────────────────
 if (isset($_POST['save'])) {
-    $name    = trim($_POST['name'] ?? '');
-    $phone   = trim($_POST['phone'] ?? '');
-    $email   = trim($_POST['email'] ?? '');
+    $name    = trim($_POST['name']    ?? '');
+    $phone   = trim($_POST['phone']   ?? '');
+    $email   = trim($_POST['email']   ?? '') ?: null;   // NULL if left blank
     $address = trim($_POST['address'] ?? '');
-    $city    = trim($_POST['city'] ?? '');
+    $city    = trim($_POST['city']    ?? '');
     $pincode = trim($_POST['pincode'] ?? '');
 
-    if (empty($name)) {
-        $_SESSION['message']  = "Customer name is required.";
+    if (empty($name) || empty($phone) || empty($address) || empty($city) || empty($pincode)) {
+        $_SESSION['message']  = "All fields except Email are required.";
         $_SESSION['msg_type'] = "danger";
         header("Location: customers.php");
         exit();

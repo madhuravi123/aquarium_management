@@ -112,6 +112,18 @@ while ($f = $fish->fetch_assoc()) {
         </tr>
     `;
         document.getElementById('itemsBody').insertAdjacentHTML('beforeend', html);
+
+        // Init Tom Select on the new row's selects.
+        // The fish_id select benefits most (32 fish options → typable filter).
+        // The type select (Fish / Supply) is also wrapped for visual consistency.
+        const typeSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][type]"]`);
+        const fishSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][fish_id]"]`);
+        if (typeSel && !typeSel.tomselect) {
+            new TomSelect(typeSel, { allowEmptyOption: false, create: false });
+        }
+        if (fishSel && !fishSel.tomselect) {
+            new TomSelect(fishSel, { allowEmptyOption: true, create: false });
+        }
     }
 
     function toggleItemType(id, type) {

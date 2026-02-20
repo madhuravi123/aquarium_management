@@ -115,6 +115,15 @@ while ($f = $fish->fetch_assoc()) {
         </tr>
     `;
         document.getElementById('saleBody').insertAdjacentHTML('beforeend', html);
+
+        // Init Tom Select on the new fish dropdown so it is typable/searchable.
+        // data-price and data-stock stay on the original <option> elements and
+        // are still accessible via select.options[select.selectedIndex] when
+        // Tom Select fires the native change event.
+        const fishSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][fish_id]"]`);
+        if (fishSel && !fishSel.tomselect) {
+            new TomSelect(fishSel, { allowEmptyOption: true, create: false });
+        }
     }
 
     function updateSalePrice(id, select) {

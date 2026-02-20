@@ -53,11 +53,11 @@ $customers = $conn->query("SELECT * FROM customers ORDER BY id DESC");
                                 <tr>
                                     <td><?php echo $i++; ?></td>
                                     <td class="fw-semibold"><?php echo htmlspecialchars($row['name']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['phone'] ?? '—'); ?></td>
-                                    <td><?php echo htmlspecialchars($row['email'] ?? '—'); ?></td>
-                                    <td><?php echo htmlspecialchars($row['city'] ?? '—'); ?></td>
-                                    <td><?php echo htmlspecialchars($row['pincode'] ?? '—'); ?></td>
-                                    <td class="small text-muted"><?php echo htmlspecialchars($row['address'] ?? '—'); ?></td>
+                                    <td><?php echo $row['phone']   ? htmlspecialchars($row['phone'])   : '—'; ?></td>
+                                    <td><?php echo $row['email']   ? htmlspecialchars($row['email'])   : '<span class="text-muted fst-italic small">—</span>'; ?></td>
+                                    <td><?php echo $row['city']    ? htmlspecialchars($row['city'])    : '—'; ?></td>
+                                    <td><?php echo $row['pincode'] ? htmlspecialchars($row['pincode']) : '—'; ?></td>
+                                    <td class="small text-muted"><?php echo $row['address'] ? htmlspecialchars($row['address']) : '—'; ?></td>
                                     <td>
                                         <a href="customers_action.php?delete=<?php echo $row['id']; ?>"
                                            class="btn btn-sm btn-danger"
@@ -109,8 +109,8 @@ $customers = $conn->query("SELECT * FROM customers ORDER BY id DESC");
                                    pattern="[0-9]{6}" title="Enter a valid 6-digit pincode" required>
                         </div>
                         <div class="col-md-8">
-                            <label class="form-label fw-semibold">Street / Area</label>
-                            <input type="text" name="address" class="form-control" placeholder="Door no., Street name, Area">
+                            <label class="form-label fw-semibold">Street / Area <span class="text-danger">*</span></label>
+                            <input type="text" name="address" class="form-control" placeholder="Door no., Street name, Area" required>
                         </div>
                     </div>
                 </div>
