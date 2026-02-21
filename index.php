@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+// ── DEMO MODE: Include DB connection (which triggers auto_reset.php) ─────
+// This ensures the demo reset timer runs on every landing-page visit,
+// even before checking session.  To disable demo mode, comment out the
+// require_once line for auto_reset.php inside config/db_connect.php.
+require_once 'config/db_connect.php';
+
 if (isset($_SESSION['user_id'])) {
     if ($_SESSION['role'] === 'customer') {
         header("Location: shop.php");
@@ -8,7 +15,6 @@ if (isset($_SESSION['user_id'])) {
     }
     exit();
 }
-require_once 'config/db_connect.php';
 // Get live fish count for the landing page stats
 $fish_count    = $conn->query("SELECT COUNT(*) FROM fish WHERE stock_quantity > 0")->fetch_row()[0] ?? 0;
 $tank_count    = $conn->query("SELECT COUNT(*) FROM tanks WHERE status='active'")->fetch_row()[0] ?? 0;

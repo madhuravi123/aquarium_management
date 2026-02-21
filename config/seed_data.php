@@ -95,6 +95,61 @@ function seed_dummy_data($conn) {
     ");
 
     // =====================================================================
+    // 4b. FISH IMAGE URLs (Wikimedia Commons – accurate species photos)
+    // =====================================================================
+    $fish_images = [
+        'Silver Arowana'          => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Osteoglossum_bicirrhosum.JPG/300px-Osteoglossum_bicirrhosum.JPG',
+        'Golden Arowana'          => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Arowana.jpg/300px-Arowana.jpg',
+        'Flowerhorn Cichlid'      => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Flowerhorn_cichlid.jpg/300px-Flowerhorn_cichlid.jpg',
+        'Dragon Flowerhorn'       => 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Flowerhorn.jpg/300px-Flowerhorn.jpg',
+        'Koi Carp (Standard)'     => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Ojiya_Nishikigoi_no_Sato_ac_%283%29.jpg/300px-Ojiya_Nishikigoi_no_Sato_ac_%283%29.jpg',
+        'Koi Carp (Premium)'      => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Ojiya_Nishikigoi_no_Sato_ac_%283%29.jpg/300px-Ojiya_Nishikigoi_no_Sato_ac_%283%29.jpg',
+        'Goldfish (Common)'       => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Gold_fish1.jpg/300px-Gold_fish1.jpg',
+        'Goldfish (Fancy Oranda)' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Orange_Oranda.jpg/300px-Orange_Oranda.jpg',
+        'Guppy (Male)'            => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Guppy_pho_0048.jpg/300px-Guppy_pho_0048.jpg',
+        'Guppy (Fancy Tail)'      => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Cobra_Guppy_%28Poecilia_reticulata%29.JPG/300px-Cobra_Guppy_%28Poecilia_reticulata%29.JPG',
+        'Molly (Black)'           => 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Black_Molly.jpg/300px-Black_Molly.jpg',
+        'Molly (Dalmatian)'       => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Poecilia_latipinna.jpg/300px-Poecilia_latipinna.jpg',
+        'Betta Fish (Male)'       => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/HM_Orange_M_Sarawut.jpg/300px-HM_Orange_M_Sarawut.jpg',
+        'Betta Fish (Crown Tail)' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Betta_splendens_male_crowntail.png/300px-Betta_splendens_male_crowntail.png',
+        'Oscar Fish'              => 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Astronotus_ocellatus.jpg/300px-Astronotus_ocellatus.jpg',
+        'Angelfish'               => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Pterophyllum_scalare_Natural_History_Museum_University_of_Pisa.jpg/300px-Pterophyllum_scalare_Natural_History_Museum_University_of_Pisa.jpg',
+        'Neon Tetra'              => 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Neonsalmler_Paracheirodon_innesi.jpg/300px-Neonsalmler_Paracheirodon_innesi.jpg',
+        'Cardinal Tetra'          => 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Paracheirodon_cardinalis.JPG/300px-Paracheirodon_cardinalis.JPG',
+        'Tiger Barb'              => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Tiger_Barb_700.jpg/300px-Tiger_Barb_700.jpg',
+        'Cherry Barb'             => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Cyprinidae_Puntius_titteya_3.jpg/300px-Cyprinidae_Puntius_titteya_3.jpg',
+        'Swordtail'               => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Xiphophorus_helleri_03.jpg/300px-Xiphophorus_helleri_03.jpg',
+        'Platy'                   => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Xiphophorus_maculatus_in_aqarium.JPG/300px-Xiphophorus_maculatus_in_aqarium.JPG',
+        'Corydoras Catfish'       => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Corydoras_paleatus_by_NiKo.jpg/300px-Corydoras_paleatus_by_NiKo.jpg',
+        'Discus Fish'             => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Symphysodon_aequifasciatus_-_Karlsruhe_Zoo_04.jpg/300px-Symphysodon_aequifasciatus_-_Karlsruhe_Zoo_04.jpg',
+        'Peacock Cichlid'         => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Aulonocara_hansbaenschi_RB2.jpg/300px-Aulonocara_hansbaenschi_RB2.jpg',
+        'Pearl Gourami'           => 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Trichopodus_leerii.jpg/300px-Trichopodus_leerii.jpg',
+        'Blue Gourami'            => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Trichopodus_trichopterus_%283_spot_gourami%2C_Philippines%29_04.jpg/300px-Trichopodus_trichopterus_%283_spot_gourami%2C_Philippines%29_04.jpg',
+        'Clown Loach'             => 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Chromobotia_macracanthus_01.jpg/300px-Chromobotia_macracanthus_01.jpg',
+        'Rainbow Fish'            => 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Melanotaenia_boesemani_-_Karlsruhe_Zoo_01.jpg/300px-Melanotaenia_boesemani_-_Karlsruhe_Zoo_01.jpg',
+        'Zebra Danio'             => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Zebrafisch.jpg/300px-Zebrafisch.jpg',
+        'Suckermouth Catfish'     => 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Hypostomus_plecostomus_-_Rapha%C3%ABl_Covain.png/300px-Hypostomus_plecostomus_-_Rapha%C3%ABl_Covain.png',
+        'Red Tail Black Shark'    => 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Epalzeorhynchos_bicolor1.jpg/300px-Epalzeorhynchos_bicolor1.jpg',
+        'Clownfish'               => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Amphiprion_ocellaris_%28Clown_anemonefish%29_by_Nick_Hobgood.jpg/300px-Amphiprion_ocellaris_%28Clown_anemonefish%29_by_Nick_Hobgood.jpg',
+        'Blue Tang'               => 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Paracanthurus-hepatus-paletten-doktorfisch.jpg/300px-Paracanthurus-hepatus-paletten-doktorfisch.jpg',
+        'Lionfish'                => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Common_lion_fish_Pterois_volitans.jpg/300px-Common_lion_fish_Pterois_volitans.jpg',
+        'Mandarin Dragonet'       => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Synchiropus_splendidus_2_Luc_Viatour.jpg/300px-Synchiropus_splendidus_2_Luc_Viatour.jpg',
+        'Flame Angelfish'         => 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flame_angelfish_%28Centropyge_loricula%29.jpg/300px-Flame_angelfish_%28Centropyge_loricula%29.jpg',
+        'Royal Gramma'            => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Gramma_loreto_01.jpg/300px-Gramma_loreto_01.jpg',
+        'Archer Fish'             => 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Toxotes_jaculatrix.jpg/300px-Toxotes_jaculatrix.jpg',
+        'Figure Eight Puffer'     => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Figure8pufferfish.jpg/300px-Figure8pufferfish.jpg',
+        'Mono Argentus'           => 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Monodactylus_argenteus_173820575.jpg/300px-Monodactylus_argenteus_173820575.jpg',
+        'Green Spotted Puffer'    => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Green_Spotted_puffer.jpg/300px-Green_Spotted_puffer.jpg',
+        'Mudskipper'              => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Schlammspringer_Periophthalmus_sp.jpg/300px-Schlammspringer_Periophthalmus_sp.jpg',
+    ];
+    $img_stmt = $conn->prepare("UPDATE fish SET image_url = ? WHERE name = ?");
+    foreach ($fish_images as $fname => $furl) {
+        $img_stmt->bind_param('ss', $furl, $fname);
+        $img_stmt->execute();
+    }
+    $img_stmt->close();
+
+    // =====================================================================
     // 5. CUSTOMERS (22 Tamil Nadu customers)
     // =====================================================================
     $conn->query("INSERT INTO customers (name, phone, email, address, city, pincode) VALUES

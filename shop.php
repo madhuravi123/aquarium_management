@@ -163,11 +163,21 @@ include 'includes/customer_header.php';
             <div class="col">
                 <div class="card h-100 shadow-sm border-0" style="border-radius:12px;overflow:hidden;">
                     <!-- Fish Image -->
-                    <div class="text-center bg-light" style="height:160px;display:flex;align-items:center;justify-content:center;">
-                        <?php if (!empty($fish['image']) && file_exists('uploads/' . $fish['image'])): ?>
+                    <div class="text-center bg-light" style="height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                        <?php
+                        $has_local  = !empty($fish['image']) && file_exists('uploads/' . $fish['image']);
+                        $has_remote = !empty($fish['image_url']);
+                        ?>
+                        <?php if ($has_local): ?>
                             <img src="uploads/<?php echo htmlspecialchars($fish['image']); ?>"
                                  alt="<?php echo htmlspecialchars($fish['name']); ?>"
-                                 style="max-height:155px;max-width:100%;object-fit:contain;">
+                                 style="width:100%;height:180px;object-fit:cover;">
+                        <?php elseif ($has_remote): ?>
+                            <img src="<?php echo htmlspecialchars($fish['image_url']); ?>"
+                                 alt="<?php echo htmlspecialchars($fish['name']); ?>"
+                                 loading="lazy"
+                                 onerror="this.onerror=null;this.parentNode.innerHTML='<i class=\'fas fa-fish text-info\' style=\'font-size:4rem;opacity:0.5;\'></i>';"
+                                 style="width:100%;height:180px;object-fit:cover;">
                         <?php else: ?>
                             <i class="fas fa-fish text-info" style="font-size:4rem;opacity:0.5;"></i>
                         <?php endif; ?>
