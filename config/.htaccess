@@ -1,0 +1,2 @@
+# Block all direct HTTP access to every file in config/
+Require all denied

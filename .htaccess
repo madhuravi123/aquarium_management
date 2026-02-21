@@ -1,0 +1,16 @@
+# ── Security: disable directory listing ──────────────────────────────────────
+Options -Indexes
+
+# ── Protect config files from direct browser access ──────────────────────────
+<FilesMatch "^(db_connect|seed|seed_data|auto_reset)\.php$">
+    Require all denied
+</FilesMatch>
+
+# ── PHP settings for shared hosting compatibility ─────────────────────────────
+<IfModule mod_php.c>
+    php_value session.cookie_httponly 1
+    php_value session.use_strict_mode 1
+</IfModule>
+
+# ── Pretty error pages: let PHP handle them ───────────────────────────────────
+ErrorDocument 404 /index.php

@@ -1,11 +1,17 @@
 <?php
-$host = 'localhost';
-$user = 'root';
-$pass = '';
-$dbname = 'aquarium_db';
+// ============================================================
+//  DATABASE CREDENTIALS
+//  XAMPP (local):  host=localhost, user=root, pass='', dbname=aquarium_db
+//  InfinityFree:   host=sqlXXX.infinityfree.com, user=epiz_XXXXXXX
+//                  pass=<your panel password>, dbname=epiz_XXXXXXX_aquarium
+// ============================================================
+$host   = 'localhost';          // ← InfinityFree: change to sqlXXX.infinityfree.com
+$user   = 'root';               // ← InfinityFree: change to epiz_XXXXXXX
+$pass   = '';                   // ← InfinityFree: change to your DB password
+$dbname = 'aquarium_db';        // ← InfinityFree: change to epiz_XXXXXXX_aquarium
 
-// Connect without database first to create it if needed
-$conn = new mysqli($host, $user, $pass);
+// Connect directly to the named database (works on both XAMPP and shared hosting)
+$conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
     error_log("[Aquarium] DB connection failed: " . $conn->connect_error);
     http_response_code(503);
@@ -13,12 +19,9 @@ if ($conn->connect_error) {
 <style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#0a3d62;color:#fff;}
 .box{text-align:center;padding:2rem;max-width:480px;}h2{color:#f39c12;margin-bottom:.5rem;}p{opacity:.8;line-height:1.6;}</style></head>
 <body><div class="box"><h2>&#128019; Database Unavailable</h2>
-<p>The database server is not responding.<br>Please ensure the <strong>XAMPP MySQL</strong> service is running, then refresh this page.</p></div></body></html>');
+<p>Could not connect to the database.<br>Please check your credentials in <strong>config/db_connect.php</strong> and ensure the database exists.</p></div></body></html>');
 }
-
-// Create database if not exists
-$conn->query("CREATE DATABASE IF NOT EXISTS `$dbname`");
-$conn->select_db($dbname);
+$conn->set_charset('utf8mb4');
 
 // Check if tables exist (use users table as indicator)
 $table_check = $conn->query("SHOW TABLES LIKE 'users'");
@@ -234,9 +237,9 @@ if ($is_first_run) {
         }
     }
 
-    // Seed dummy data on first run
-    require_once __DIR__ . '/seed_data.php';
-    seed_dummy_data($conn);
+    // Seed dummy data on first run (run_safe_seed also creates the demo customer)
+    require_once __DIR__ . '/seed.php';
+    run_safe_seed($conn);
 } else {
     // Run migrations for existing databases (errors are silently ignored)
     $migrations = [

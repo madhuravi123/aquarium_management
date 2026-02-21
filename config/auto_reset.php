@@ -110,8 +110,17 @@ function demo_auto_reset($conn)
             // Not time yet — exit early (fast path: 1 SELECT per request)
             return;
         }
+    } else {
+        // ── Step 3: First load — tables were just seeded by db_connect.php ──
+        // Do NOT truncate the fresh data.  Simply record the start timestamp
+        // so the 10-minute countdown begins from this first visit.
+        $conn->query(
+            "REPLACE INTO demo_reset (id, last_reset, reset_interval_min)
+             VALUES (1, NOW(), " . DEMO_RESET_MINUTES . ")"
+        );
+        return;
     }
-    // If no row exists, this is the very first load — seed and set timestamp.
+    // Interval has elapsed — full reset follows.
 
     // ══════════════════════════════════════════════════════════════════════
     //  RESET IN PROGRESS
