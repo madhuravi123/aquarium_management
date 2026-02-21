@@ -3,7 +3,7 @@
     <a href="dashboard.php" class="d-flex align-items-center mb-1 text-white text-decoration-none">
         <i class="fas fa-fish me-2 fs-5"></i>
         <div>
-            <span class="fs-5 fw-bold">Harini Aquarium</span>
+            <span class="fs-5 fw-bold">Aquamart</span>
             <small class="d-block text-white-50" style="font-size:0.7rem;">Fish &amp; Aquarium Shop</small>
         </div>
     </a>

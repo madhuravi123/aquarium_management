@@ -27,7 +27,7 @@ if ($is_logged_in && isset($conn)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' – ' : ''; ?>Harini Aquarium Shop</title>
+    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' – ' : ''; ?>Aquamart Shop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Tom Select (searchable/typable dropdowns) -->
@@ -42,7 +42,7 @@ if ($is_logged_in && isset($conn)) {
         <a class="navbar-brand d-flex align-items-center" href="shop.php">
             <i class="fas fa-fish me-2 fs-4"></i>
             <div>
-                <div class="brand-name">Harini Aquarium</div>
+                <div class="brand-name">Aquamart</div>
                 <small class="d-block">Fish &amp; Aquarium Shop, Cuddalore</small>
             </div>
         </a>

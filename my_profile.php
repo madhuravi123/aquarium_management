@@ -194,7 +194,7 @@ include 'includes/customer_header.php';
 </div>
 
 <footer class="text-center text-muted py-4 mt-5 border-top bg-white">
-    <small>&copy; <?php echo date('Y'); ?> Harini Aquarium &amp; Fish Shop, Cuddalore</small>
+    <small>&copy; <?php echo date('Y'); ?> Aquamart &amp; Fish Shop, Cuddalore</small>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -25,7 +25,7 @@ $species_count = $conn->query("SELECT COUNT(DISTINCT species) FROM fish")->fetch
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harini Aquarium & Fish Shop – Cuddalore</title>
+    <title>Aquamart & Fish Shop – Cuddalore</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
@@ -321,7 +321,7 @@ foreach ($bubble_sizes as $k => $sz) {
                     Manjakuppam, Cuddalore – 607001
                 </div>
 
-                <h1>Welcome to<br>Harini Aquarium</h1>
+                <h1>Welcome to<br>Aquamart</h1>
 
                 <p class="hero-tagline mt-3">
                     Discover the beauty beneath the surface. Premium freshwater &amp;
@@ -382,7 +382,7 @@ foreach ($bubble_sizes as $k => $sz) {
 <section class="features">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold" style="color:#fff;">Why Choose Harini Aquarium?</h2>
+            <h2 class="fw-bold" style="color:#fff;">Why Choose Aquamart?</h2>
             <p class="text-muted" style="color:rgba(255,255,255,0.7) !important;">Tamil Nadu's trusted source for premium fish since 2018</p>
         </div>
         <div class="row g-4">
@@ -460,7 +460,7 @@ foreach ($bubble_sizes as $k => $sz) {
                     <p class="quote-text">
                         "Buy a fish, bring the ocean home. Every tank tells a thousand stories of the deep."
                     </p>
-                    <div class="quote-author">— Harini Aquarium, Cuddalore</div>
+                    <div class="quote-author">— Aquamart, Cuddalore</div>
                 </div>
             </div>
             <!-- Indicators -->
@@ -480,7 +480,7 @@ foreach ($bubble_sizes as $k => $sz) {
         <div class="row align-items-center gy-2">
             <div class="col-md-6 text-md-start">
                 <i class="fas fa-fish me-2" style="color:#14d2c8;"></i>
-                <strong style="color:rgba(255,255,255,0.7);">Harini Aquarium &amp; Fish Shop</strong>
+                <strong style="color:rgba(255,255,255,0.7);">Aquamart &amp; Fish Shop</strong>
                 &nbsp;|&nbsp; Manjakuppam, Cuddalore – 607001
             </div>
             <div class="col-md-6 text-md-end">

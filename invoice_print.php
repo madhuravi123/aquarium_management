@@ -30,7 +30,7 @@ $items = $stmt->get_result();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice #<?php echo $id; ?> – Harini Aquarium</title>
+    <title>Invoice #<?php echo $id; ?> – Aquamart</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -59,7 +59,7 @@ $items = $stmt->get_result();
         <div class="row invoice-header align-items-start">
             <div class="col-7">
                 <h3 class="fw-bold brand-color mb-0">
-                    <i class="fas fa-fish me-2"></i>Harini Aquarium
+                    <i class="fas fa-fish me-2"></i>Aquamart
                 </h3>
                 <p class="mb-0 text-muted" style="font-size:0.9rem;">Fish &amp; Aquarium Shop</p>
                 <p class="mb-0" style="font-size:0.85rem;">
@@ -162,13 +162,13 @@ $items = $stmt->get_result();
             <div class="col-4 text-center">
                 <div class="border-top pt-2 mt-5">
                     <small class="text-muted">Authorised Signatory</small><br>
-                    <small class="fw-bold">Harini Aquarium &amp; Fish Shop</small>
+                    <small class="fw-bold">Aquamart &amp; Fish Shop</small>
                 </div>
             </div>
         </div>
 
         <div class="text-center mt-4 pt-3 border-top text-muted">
-            <small>Thank you for shopping at Harini Aquarium! &nbsp;|&nbsp; Cuddalore, Tamil Nadu</small>
+            <small>Thank you for shopping at Aquamart! &nbsp;|&nbsp; Cuddalore, Tamil Nadu</small>
         </div>
     </div>
 </body>

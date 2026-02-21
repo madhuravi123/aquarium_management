@@ -80,7 +80,7 @@ include 'includes/customer_header.php';
                 <?php else: ?>
                     <h4 class="mb-1">
                         <i class="fas fa-fish me-2"></i>
-                        Welcome to Harini Aquarium Shop!
+                        Welcome to Aquamart Shop!
                     </h4>
                     <p class="mb-0 opacity-75">
                         Browse freely — no login required.
@@ -258,7 +258,7 @@ include 'includes/customer_header.php';
 <footer class="text-center text-muted py-4 mt-5 border-top bg-white">
     <small>
         &copy; <?php echo date('Y'); ?>
-        <strong>Harini Aquarium &amp; Fish Shop</strong> &nbsp;|&nbsp;
+        <strong>Aquamart &amp; Fish Shop</strong> &nbsp;|&nbsp;
         Manjakuppam, Cuddalore – 607001, Tamil Nadu &nbsp;|&nbsp;
         Ph: 9876543210
     </small>

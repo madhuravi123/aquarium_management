@@ -1,6 +1,6 @@
 <?php
 /**
- * Structured Error Logger — Harini Aquarium Management System
+ * Structured Error Logger — Aquamart Management System
  *
  * THREE LEVELS of error information:
  *  1. User-level  → Friendly flash message (set by caller in $_SESSION)

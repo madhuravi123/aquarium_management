@@ -2,7 +2,7 @@
 function seed_dummy_data($conn) {
 
     // =====================================================================
-    // 1. USERS - Admin (Harini) + Staff (Kalpana, Preethi) — customers self-register
+    // 1. USERS - Admin (Aquamart) + Staff (Kalpana, Preethi) — customers self-register
     // =====================================================================
     $admin_pass    = password_hash('harini@123',  PASSWORD_DEFAULT);
     $kalpana_pass  = password_hash('kalpana@123', PASSWORD_DEFAULT);
@@ -181,11 +181,11 @@ function seed_dummy_data($conn) {
     // 6. EMPLOYEES (Indian names, Indian salary in INR)
     // =====================================================================
     $conn->query("INSERT INTO employees (name, role, salary, phone, email, hire_date) VALUES
-        ('Arunachalam R.',   'Store Manager',     25000.00, '9842200001', 'arunachalam@hariniaquarium.in',  '2023-06-01'),
-        ('Kamala Sundari',   'Fish Specialist',   20000.00, '9842200002', 'kamala@hariniaquarium.in',       '2023-08-15'),
-        ('Velmurugan K.',    'Tank Maintenance',  18000.00, '9842200003', 'velmurugan@hariniaquarium.in',   '2023-09-01'),
-        ('Santhosh Kumar',   'Sales Associate',   15000.00, '9842200004', 'santhosh@hariniaquarium.in',     '2024-01-10'),
-        ('Lakshmi Priya',    'Accountant',        22000.00, '9842200005', 'lakshmipriya@hariniaquarium.in', '2023-07-20')
+        ('Arunachalam R.',   'Store Manager',     25000.00, '9842200001', 'arunachalam@aquamart.in',  '2023-06-01'),
+        ('Kamala Sundari',   'Fish Specialist',   20000.00, '9842200002', 'kamala@aquamart.in',       '2023-08-15'),
+        ('Velmurugan K.',    'Tank Maintenance',  18000.00, '9842200003', 'velmurugan@aquamart.in',   '2023-09-01'),
+        ('Santhosh Kumar',   'Sales Associate',   15000.00, '9842200004', 'santhosh@aquamart.in',     '2024-01-10'),
+        ('Lakshmi Priya',    'Accountant',        22000.00, '9842200005', 'lakshmipriya@aquamart.in', '2023-07-20')
     ");
 
     // =====================================================================

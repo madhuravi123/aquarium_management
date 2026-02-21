@@ -15,7 +15,7 @@ require_once 'config/db_connect.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login – Harini Aquarium Management</title>
+    <title>Login – Aquamart Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
@@ -62,7 +62,7 @@ require_once 'config/db_connect.php';
                 <!-- Business Title -->
                 <div class="text-center text-white mb-3">
                     <i class="fas fa-water" style="font-size:2.5rem;" class="mb-2 d-block"></i>
-                    <h3 class="fw-bold mb-0">Harini Aquarium</h3>
+                    <h3 class="fw-bold mb-0">Aquamart</h3>
                     <p class="text-light small mb-0">Management Portal</p>
                     <p class="text-light" style="font-size:0.78rem;">
                         <i class="fas fa-map-marker-alt me-1"></i>
@@ -153,7 +153,7 @@ require_once 'config/db_connect.php';
                 </p>
 
                 <p class="text-center text-light mt-1" style="font-size:0.78rem;">
-                    &copy; <?php echo date('Y'); ?> Harini Aquarium &amp; Fish Shop, Cuddalore
+                    &copy; <?php echo date('Y'); ?> Aquamart &amp; Fish Shop, Cuddalore
                 </p>
 
             </div>
