@@ -71,11 +71,29 @@ require_once 'config/db_connect.php';
                 </div>
 
                 <div class="card login-card">
-                    <!-- Card Header -->
+                    <!-- Card Header with Tabs -->
                     <div class="login-header text-white text-center">
-                        <h5 class="mb-0 fw-bold">
-                            <i class="fas fa-sign-in-alt me-2"></i>Sign In to Your Account
+                        <h5 class="mb-3 fw-bold">
+                            <i class="fas fa-fish me-2"></i>Aquamart Portal
                         </h5>
+                        <ul class="nav nav-pills justify-content-center">
+                            <li class="nav-item">
+                                <button class="nav-link active text-white px-4"
+                                        style="background:rgba(255,255,255,0.25);"
+                                        data-bs-toggle="pill" data-bs-target="#loginTab"
+                                        id="loginTabBtn">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link text-white px-4"
+                                        style="background:transparent;"
+                                        data-bs-toggle="pill" data-bs-target="#registerTab"
+                                        id="registerTabBtn">
+                                    <i class="fas fa-user-plus me-1"></i>New Customer
+                                </button>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="card-body p-4">
@@ -86,7 +104,6 @@ require_once 'config/db_connect.php';
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         <?php endif; ?>
-
                         <?php if (isset($_GET['success'])): ?>
                             <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
                                 <i class="fas fa-check-circle me-1"></i>
@@ -94,7 +111,6 @@ require_once 'config/db_connect.php';
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         <?php endif; ?>
-
                         <?php if (isset($_GET['info'])): ?>
                             <div class="alert alert-info alert-dismissible fade show py-2" role="alert">
                                 <i class="fas fa-info-circle me-1"></i>
@@ -103,33 +119,61 @@ require_once 'config/db_connect.php';
                             </div>
                         <?php endif; ?>
 
-                        <form action="auth_login.php" method="POST">
-                            <div class="mb-3">
-                                <label for="username" class="form-label fw-semibold">
-                                    <i class="fas fa-user me-1 text-primary"></i>Username
-                                </label>
-                                <input type="text" class="form-control" id="username" name="username"
-                                       placeholder="Enter username" required autofocus>
+                        <div class="tab-content">
+                            <!-- LOGIN TAB -->
+                            <div class="tab-pane fade show active" id="loginTab">
+                                <form action="auth_login.php" method="POST">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label fw-semibold">
+                                            <i class="fas fa-user me-1 text-primary"></i>Username
+                                        </label>
+                                        <input type="text" class="form-control" id="username" name="username"
+                                               placeholder="Enter username" required autofocus>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label fw-semibold">
+                                            <i class="fas fa-lock me-1 text-primary"></i>Password
+                                        </label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                               placeholder="Enter password" required>
+                                    </div>
+                                    <div class="d-grid mt-4">
+                                        <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label fw-semibold">
-                                    <i class="fas fa-lock me-1 text-primary"></i>Password
-                                </label>
-                                <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Enter password" required>
+
+                            <!-- REGISTER TAB -->
+                            <div class="tab-pane fade" id="registerTab">
+                                <form action="register.php" method="POST">
+                                    <div class="mb-3">
+                                        <label for="reg_name" class="form-label fw-semibold">
+                                            <i class="fas fa-user me-1 text-success"></i>Your Full Name
+                                        </label>
+                                        <input type="text" class="form-control" id="reg_name" name="full_name"
+                                               placeholder="e.g. Ravi Kumar" required>
+                                    </div>
+                                    <div class="mb-3 p-3 rounded" style="background:#f0f9f4; border:1px solid #c3e6cb;">
+                                        <p class="mb-1 text-muted" style="font-size:0.8rem;"><i class="fas fa-key me-1"></i>Your auto-generated login:</p>
+                                        <div><small class="text-muted">Username:</small> <strong id="preview_user" class="text-primary">—</strong></div>
+                                        <div><small class="text-muted">Password:</small> <strong id="preview_pass" class="text-success">—</strong></div>
+                                    </div>
+                                    <div class="d-grid mt-3">
+                                        <button type="submit" class="btn btn-success btn-lg fw-semibold">
+                                            <i class="fas fa-user-plus me-2"></i>Create Account &amp; Login
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="d-grid mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg fw-semibold">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
 
-                    <!-- Default Credentials -->
+                    <!-- Credential Hints -->
                     <div class="card-footer bg-light px-4 py-3">
                         <p class="text-muted text-center mb-2" style="font-size:0.8rem;">
-                            <i class="fas fa-info-circle me-1"></i><strong>Demo Login Credentials</strong>
+                            <i class="fas fa-info-circle me-1"></i><strong>Staff Login Credentials</strong>
                         </p>
                         <div class="credential-box admin-cred">
                             <span class="badge bg-danger me-1" style="font-size:0.72rem;">Admin</span>
@@ -137,11 +181,11 @@ require_once 'config/db_connect.php';
                         </div>
                         <div class="credential-box staff-cred">
                             <span class="badge bg-primary me-1" style="font-size:0.72rem;">Staff</span>
-                            <small><strong>rajan</strong> / staff@123</small>
+                            <small><strong>kalpana</strong> / kalpana@123</small>
                         </div>
                         <div class="credential-box cust-cred">
                             <span class="badge bg-success me-1" style="font-size:0.72rem;">Customer</span>
-                            <small><strong>demo</strong> / demo@123</small>
+                            <small>Use <em>New Customer</em> tab &rarr; password is <em>yourname@123</em></small>
                         </div>
                     </div>
                 </div>
@@ -161,5 +205,28 @@ require_once 'config/db_connect.php';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-preview username/password as user types their name
+        document.getElementById('reg_name').addEventListener('input', function () {
+            var name = this.value.trim().toLowerCase().replace(/\s+/g, '');
+            document.getElementById('preview_user').textContent = name || '—';
+            document.getElementById('preview_pass').textContent = name ? name + '@123' : '—';
+        });
+
+        // Highlight active tab button
+        document.querySelectorAll('[data-bs-toggle="pill"]').forEach(function(btn) {
+            btn.addEventListener('shown.bs.tab', function() {
+                document.querySelectorAll('[data-bs-toggle="pill"]').forEach(function(b) {
+                    b.style.background = 'transparent';
+                });
+                btn.style.background = 'rgba(255,255,255,0.25)';
+            });
+        });
+
+        // Auto-switch to register tab if URL has ?tab=register
+        if (new URLSearchParams(window.location.search).get('tab') === 'register') {
+            document.getElementById('registerTabBtn').click();
+        }
+    </script>
 </body>
 </html>
