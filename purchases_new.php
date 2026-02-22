@@ -18,8 +18,9 @@ $fish_options = [];
 while ($f = $fish->fetch_assoc()) {
     $fish_options[] = $f;
 }
-// Get pre-selected fish from URL parameter
+// Get pre-selected fish from URL parameter (restock from reports)
 $preselected_fish_id = isset($_GET['fish_id']) ? intval($_GET['fish_id']) : null;
+$is_restock = $preselected_fish_id ? true : false;
 $preselected_fish_price = 0;
 if ($preselected_fish_id) {
     foreach($fish_options as $f) {
@@ -36,6 +37,10 @@ if ($preselected_fish_id) {
     <div class="flex-grow-1 p-4">
         <h2>New Purchase</h2>
         <form action="purchases_action.php" method="POST">
+                    <?php if ($is_restock): ?>
+                    <input type="hidden" name="is_restock" value="1">
+                    <input type="hidden" name="restock_fish_id" value="<?php echo $preselected_fish_id; ?>">
+                    <?php endif; ?>
             <div class="card card-custom mb-3">
                 <div class="card-body">
                     <div class="row">
@@ -129,11 +134,13 @@ if ($preselected_fish_id) {
         // The type select (Fish / Supply) is also wrapped for visual consistency.
         const typeSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][type]"]`);
         const fishSel = document.querySelector(`#row_${rowId} select[name="items[${rowId}][fish_id]"]`);
-        if (typeSel && !typeSel.tomselect) {
-            new TomSelect(typeSel, { allowEmptyOption: false, create: false, dropdownParent: 'body' });
-        }
-        if (fishSel && !fishSel.tomselect) {
-            new TomSelect(fishSel, { allowEmptyOption: true, create: false, dropdownParent: 'body' });
+        if (typeof TomSelect !== 'undefined') {
+            if (typeSel && !typeSel.tomselect) {
+                new TomSelect(typeSel, { allowEmptyOption: false, create: false, dropdownParent: 'body' });
+            }
+            if (fishSel && !fishSel.tomselect) {
+                new TomSelect(fishSel, { allowEmptyOption: true, create: false, dropdownParent: 'body' });
+            }
         }
     }
 
@@ -177,65 +184,49 @@ if ($preselected_fish_id) {
         calcGrandTotal();
     }
 
-    // Add one row by default
+    // Add one row by default (but TomSelect will init later from footer)
     addItemRow();
 
     // Auto-select fish if passed via URL parameter
     <?php if ($preselected_fish_id): ?>
-    (function() {
+    window.addEventListener('load', function() {
         const preselectedId = "<?php echo $preselected_fish_id; ?>";
         const preselectedPrice = "<?php echo $preselected_fish_price; ?>";
-        const preselectedName = "<?php 
-            $name = '';
-            foreach($fish_options as $f) {
-                if($f['id'] == $preselected_fish_id) {
-                    $name = $f['name'];
-                    break;
+        
+        // First, initialize TomSelect on the fish select if not done yet
+        const fishSelect = document.querySelector('select[name="items[0][fish_id]"]');
+        const typeSelect = document.querySelector('select[name="items[0][type]"]');
+        
+        if (fishSelect && typeof TomSelect !== 'undefined') {
+            // Init TomSelect if not already done
+            if (!fishSelect.tomselect) {
+                new TomSelect(fishSelect, { allowEmptyOption: true, create: false, dropdownParent: 'body' });
+            }
+            if (typeSelect && !typeSelect.tomselect) {
+                new TomSelect(typeSelect, { allowEmptyOption: false, create: false, dropdownParent: 'body' });
+            }
+            
+            // Now set the pre-selected value
+            setTimeout(function() {
+                if (fishSelect.tomselect) {
+                    fishSelect.tomselect.setValue(preselectedId, true);
                 }
-            }
-            echo addslashes($name);
-        ?>";
-        
-        // Function to set the fish selection
-        function setPreselectedFish() {
-            const fishSelect = document.querySelector('select[name="items[0][fish_id]"]');
-            const priceInput = document.querySelector('input[name="items[0][unit_price]"]');
-            const qtyInput = document.querySelector('input[name="items[0][quantity]"]');
-            
-            if (!fishSelect) {
-                console.log('Fish select not found, retrying...');
-                setTimeout(setPreselectedFish, 100);
-                return;
-            }
-            
-            console.log('Found fish select, tomselect:', fishSelect.tomselect ? 'yes' : 'no');
-            
-            // Set the underlying select value first
-            fishSelect.value = preselectedId;
-            
-            // Update TomSelect if initialized
-            if (fishSelect.tomselect) {
-                fishSelect.tomselect.setValue(preselectedId);
-                fishSelect.tomselect.refreshOptions();
-            }
-            
-            // Update price and calculate total
-            if (priceInput && preselectedPrice > 0) {
-                priceInput.value = preselectedPrice;
-                const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-                const price = parseFloat(preselectedPrice) || 0;
-                const total = (qty * price).toFixed(2);
-                const totalInput = document.getElementById('total_0');
-                if (totalInput) totalInput.value = total;
-                calcGrandTotal();
-            }
-            
-            console.log('Set fish to:', preselectedName, 'ID:', preselectedId, 'Price:', preselectedPrice);
+                
+                // Update price and total
+                const priceInput = document.querySelector('input[name="items[0][unit_price]"]');
+                const qtyInput = document.querySelector('input[name="items[0][quantity]"]');
+                if (priceInput && preselectedPrice > 0) {
+                    priceInput.value = preselectedPrice;
+                    const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+                    const price = parseFloat(preselectedPrice) || 0;
+                    const total = (qty * price).toFixed(2);
+                    const totalInput = document.getElementById('total_0');
+                    if (totalInput) totalInput.value = total;
+                    calcGrandTotal();
+                }
+            }, 100);
         }
-        
-        // Start trying after a short delay
-        setTimeout(setPreselectedFish, 500);
-    })();
+    });
     <?php endif; ?>
 </script>
 <?php include 'includes/footer.php'; ?>

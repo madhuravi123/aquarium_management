@@ -38,9 +38,17 @@ $tanks = $conn->query("SELECT * FROM tanks WHERE status='active'");
             <?php while ($row = $fish_result->fetch_assoc()): ?>
                 <div class="col-md-4 mb-4">
                     <div class="card card-custom h-100">
-                        <?php if ($row['image']): ?>
-                            <img src="uploads/<?php echo $row['image']; ?>" class="card-img-top"
+                        <?php
+                        $has_local  = !empty($row['image']) && file_exists('uploads/' . $row['image']);
+                        $has_remote = !empty($row['image_url']);
+                        ?>
+                        <?php if ($has_local): ?>
+                            <img src="uploads/<?php echo htmlspecialchars($row['image']); ?>" class="card-img-top"
                                 style="height: 200px; object-fit: cover;" alt="Fish Image">
+                        <?php elseif ($has_remote): ?>
+                            <img src="<?php echo htmlspecialchars($row['image_url']); ?>" class="card-img-top"
+                                style="height: 200px; object-fit: cover;" alt="Fish Image"
+                                onerror="this.onerror=null;this.parentNode.innerHTML='<div class=bg-secondary text-white d-flex align-items-center justify-content-center style=height:200px><i class=fas fa-fish fa-3x></i></div>';">
                         <?php else: ?>
                             <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
                                 style="height: 200px;">

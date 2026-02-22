@@ -17,6 +17,8 @@ if (isset($_POST['save_purchase'])) {
     $purchase_date = $purchase_date_raw . ' ' . date('H:i:s');
     $total_amount = floatval($_POST['total_amount']);
     $items = $_POST['items'] ?? [];
+    $is_restock = isset($_POST['is_restock']) && $_POST['is_restock'] == '1';
+    $restock_fish_id = isset($_POST['restock_fish_id']) ? intval($_POST['restock_fish_id']) : null;
 
     $conn->begin_transaction();
 
@@ -52,6 +54,17 @@ if (isset($_POST['save_purchase'])) {
         $conn->commit();
         $_SESSION['message'] = "Purchase recorded successfully!";
         $_SESSION['msg_type'] = "success";
+        
+        // If this was a restock from reports, redirect back to reports
+        if ($is_restock) {
+            // Get updated stock for the restocked fish
+            $stock_check = $conn->query("SELECT name, stock_quantity FROM fish WHERE id = $restock_fish_id");
+            if ($stock_check && $fish_data = $stock_check->fetch_assoc()) {
+                $_SESSION['message'] = "Restocked {$fish_data['name']} successfully! New stock: {$fish_data['stock_quantity']}";
+            }
+            header("Location: reports.php");
+            exit();
+        }
     } catch (Exception $e) {
         $conn->rollback();
         $_SESSION['message'] = "Error: " . $e->getMessage();

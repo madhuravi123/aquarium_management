@@ -5,10 +5,16 @@
 //  InfinityFree:   host=sqlXXX.infinityfree.com, user=epiz_XXXXXXX
 //                  pass=<your panel password>, dbname=epiz_XXXXXXX_aquarium
 // ============================================================
-$host   = "sql308.infinityfree.com";   // ← InfinityFree: change to sqlXXX.infinityfree.com
-$user   = "if0_41199079";             // ← InfinityFree: change to epiz_XXXXXXX
-$pass   = "Partha2002m";                          // ← InfinityFree: change to your DB password
-$dbname = "if0_41199079_aquarium_db";  // ← InfinityFree: change to epiz_XXXXXXX_aquariu
+//$host   = "sql308.infinityfree.com";   // ← InfinityFree: change to sqlXXX.infinityfree.com
+//$user   = "if0_41199079";             // ← InfinityFree: change to epiz_XXXXXXX
+//$pass   = "Partha2002m";                          // ← InfinityFree: change to your DB password
+//$dbname = "if0_41199079_aquarium_db";  // ← InfinityFree: change to epiz_XXXXXXX_aquarium
+
+
+$host   = "localhost";   // ← InfinityFree: change to sqlXXX.infinityfree.com
+$user   = "root";             // ← InfinityFree: change to epiz_XXXXXXX
+$pass   = "";                          // ← InfinityFree: change to your DB password
+$dbname = "aquarium_db";
 
 // Connect directly to the named database (works on both XAMPP and shared hosting)
 $conn = new mysqli($host, $user, $pass, $dbname);

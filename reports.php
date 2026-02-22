@@ -29,6 +29,13 @@ $profit = $revenue - $expenses;
 <div class="d-flex">
     <?php include 'includes/sidebar.php'; ?>
     <div class="flex-grow-1 p-4">
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-<?php echo $_SESSION['msg_type'] ?? 'success'; ?> alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i><?php echo $_SESSION['message']; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <?php unset($_SESSION['message']); unset($_SESSION['msg_type']); ?>
+        <?php endif; ?>
         <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">Reports & Analytics</h2>
                     <div class="text-end">
